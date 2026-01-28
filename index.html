@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zehinli Sözlük - Hytaý we Türkmen Dili</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50; /* Твой зеленый цвет */
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-color);
+            text-align: center;
+        }
+        
+        /* Главный блок */
+        .hero {
+            background: white;
+            width: 100%;
+            padding: 60px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+
+        p.subtitle {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Кнопка скачивания */
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+
+        .download-btn:active {
+            transform: scale(0.95);
+        }
+
+        .version-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Список функций */
+        .features {
+            padding: 40px 20px;
+            max-width: 600px;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .icon {
+            font-size: 24px;
+            margin-right: 15px;
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 50%;
+            color: var(--primary-color);
+        }
+
+        .text h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .text p {
+            margin: 5px 0 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <div style="font-size: 80px; margin-bottom: 10px;"> </div> 
+
+        <h1>Zehinli Sözlük</h1>
+        <p class="subtitle">Türkmençe-Hytaýça sözlük. Offline, sesli we HSK derejeleri bilen.</p>
+        
+        <a href="apps/zehinli_sozluk.apk" class="download-btn">
+            📥 Ýükle (Android)
+        </a>
+        <div class="version-info">Wersiýa 1.0.0 • APK • Mugt</div>
+    </div>
+
+    <div class="features">
+        <div class="feature-item">
+            <div class="icon">📚</div>
+            <div class="text">
+                <h3>Uly Sözlük</h3>
+                <p>Müňlerçe hytaýça we türkmençe sözler we jümleler.</p>
+            </div>
+        </div>
+
+        <div class="feature-item">
+            <div class="icon">🔊</div>
+            <div class="text">
+                <h3>Sesli Okamak</h3>
+                <p>Sözleriň we jümleleriň dogry aýdalyşyny diňläň.</p>
+            </div>
+        </div>
+
+        <div class="feature-item">
+            <div class="icon">🎓</div>
+            <div class="text">
+                <h3>HSK Derejeleri</h3>
+                <p>HSK 1-den HSK 6-a çenli ähli sözler jemlenen.</p>
+            </div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="icon">📡</div>
+            <div class="text">
+                <h3>Offline Işleýär</h3>
+                <p>Internet bolmasa-da sözlükden peýdalanyň.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Zehinli Sözlük. Ähli hukuklar goralan.</p>
+        <p>Habarlaşmak üçin: <a href="mailto:info@zehinli.org">info@zehinli.org</a></p>
+    </footer>
+
+</body>
+</html>
