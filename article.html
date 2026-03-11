@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
+    <title>Загрузка статьи... - Zehinli</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-ground: #0f0f0f;
+            --bg-layer-1: #1e1e1e;
+            --accent: #C8395F;
+            --text-main: #f2f2f2;
+            --text-dim: #b3b3b3;
+            --border-color: #333333;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-ground);
+            color: var(--text-main);
+            font-family: 'Red Hat Display', sans-serif;
+            line-height: 1.6;
+        }
+        header {
+            background: var(--bg-layer-1);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo { font-size: 26px; font-weight: 900; color: var(--accent); text-decoration: none;}
+        
+        /* Стили для чтения статьи */
+        .article-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .back-link {
+            display: inline-block;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .back-link:hover { color: var(--accent); }
+        .article-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .tag { color: var(--accent); font-weight: 900; font-size: 14px; letter-spacing: 1px; }
+        h1 { font-size: 2.5rem; margin: 10px 0 20px; line-height: 1.2; }
+        .article-text {
+            font-size: 1.1rem;
+            color: #d1d1d1;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">ZEHINLI</a>
+    </header>
+
+    <main class="article-container" id="article-content">
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Назад на главную</a>
+        
+        <div id="loading" style="text-align: center; margin-top: 50px; color: var(--text-dim);">Загружаем знания...</div>
+    </main>
+
+    <script>
+        async function loadSingleArticle() {
+            // 1. Достаем ID статьи из ссылки (например, ?id=nw_2026_03_11)
+            const urlParams = new URLSearchParams(window.location.search);
+            const articleId = urlParams.get('id');
+
+            const container = document.getElementById('article-content');
+            const loading = document.getElementById('loading');
+
+            if (!articleId) {
+                container.innerHTML = '<h1>Статья не найдена</h1><a href="index.html" class="back-link">Вернуться</a>';
+                return;
+            }
+
+            try {
+                // 2. Идем в папку content и берем нужный файл
+                const response = await fetch(`content/${articleId}.json`);
+                if (!response.ok) throw new Error('Файл не найден');
+                
+                const article = await response.json();
+
+                // 3. Меняем заголовок вкладки в браузере для SEO
+                document.title = `${article.title} - Zehinli`;
+
+                // 4. Рисуем саму статью!
+                loading.style.display = 'none';
+                const articleHTML = `
+                    <img src="${article.image}" alt="${article.title}" class="article-image">
+                    <span class="tag">${article.tag}</span>
+                    <h1>${article.title}</h1>
+                    <div style="color: var(--text-dim); margin-bottom: 30px;">
+                        <i class="fa-regular fa-clock"></i> ${article.readTime}
+                    </div>
+                    <div class="article-text">
+                        ${article.text || article.description} 
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', articleHTML);
+
+            } catch (error) {
+                console.error(error);
+                loading.innerHTML = 'Произошла ошибка при загрузке. Возможно, такой статьи нет.';
+            }
+        }
+
+        loadSingleArticle();
+    </script>
+</body>
+</html>
