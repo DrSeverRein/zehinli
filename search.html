@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск — Zehinli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0f0f0f; --layer: #1e1e1e; --accent: #C8395F; --text: #f2f2f2; --border: #333; }
+        body { background: var(--bg); color: var(--text); font-family: 'Red Hat Display', sans-serif; margin: 0; }
+        header { background: var(--layer); padding: 15px 20px; border-bottom: 1px solid var(--border); }
+        .container { max-width: 800px; margin: 50px auto; padding: 0 20px; }
+        .search-input { width: 100%; background: var(--layer); border: 2px solid var(--border); padding: 15px; border-radius: 10px; color: white; font-size: 1.2rem; outline: none; }
+        .search-input:focus { border-color: var(--accent); }
+        .result-item { margin-top: 20px; padding: 20px; background: var(--layer); border-radius: 10px; border-left: 5px solid var(--accent); }
+        .result-item a { color: white; text-decoration: none; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header style="text-align:center"><a href="index.html" style="color:var(--accent); text-decoration:none; font-weight:900;">ZEHINLI</a></header>
+    <div class="container">
+        <input type="text" class="search-input" id="query" placeholder="Что ищем? (например: Марс, телескоп...)" oninput="doSearch()">
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let db = [];
+        async function load() {
+            const list = await (await fetch('posts_list.json')).json();
+            for (const f of list) {
+                const a = await (await fetch(`content/${f}`)).json();
+                a.id = f.replace('.json', '');
+                db.push(a);
+            }
+        }
+        function doSearch() {
+            const q = document.getElementById('query').value.toLowerCase();
+            const res = document.getElementById('results');
+            res.innerHTML = '';
+            if (q.length < 2) return;
+            
+            db.filter(a => a.title.toLowerCase().includes(q) || a.description.toLowerCase().includes(q)).forEach(a => {
+                res.innerHTML += `<div class="result-item"><a href="article.html?id=${a.id}">${a.title}</a><p style="color:#aaa">${a.description}</p></div>`;
+            });
+        }
+        load();
+    </script>
+</body>
+</html>
