@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подкасты — Zehinli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0f0f0f; --layer: #1e1e1e; --accent: #C8395F; --text: #f2f2f2; --border: #333; }
+        body { background: var(--bg); color: var(--text); font-family: 'Red Hat Display', sans-serif; margin: 0; }
+        header { background: var(--layer); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--accent); text-decoration: none; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .podcast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .video-card { background: var(--layer); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
+        .video-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .video-info { padding: 15px; }
+        .video-info h3 { margin: 0 0 10px 0; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">ZEHINLI</a>
+        <a href="index.html" style="color: #aaa; text-decoration: none;"><i class="fa-solid fa-house"></i> На главную</a>
+    </header>
+    <div class="container">
+        <h1 style="margin-bottom: 30px;">Наши Подкасты</h1>
+        <div class="podcast-grid">
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/av4Lj70HgSI" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Наука о дыхании и здоровье</h3>
+                    <p style="color: #aaa; font-size: 14px;">Выпуск #12 — Исследуем механизмы сна.</p>
+                </div>
+            </div>
+
+            <div class="video-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/Mr2lhGSazkQ" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>Эксперименты в школе</h3>
+                    <p style="color: #aaa; font-size: 14px;">Выпуск #11 — Физика вокруг нас.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
