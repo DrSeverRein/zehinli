@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Темы — Zehinli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0f0f0f; --layer: #1e1e1e; --accent: #C8395F; --text: #f2f2f2; --dim: #b3b3b3; --border: #333; }
+        body { background: var(--bg); color: var(--text); font-family: 'Red Hat Display', sans-serif; margin: 0; }
+        header { background: var(--layer); padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--accent); text-decoration: none; }
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .tag-cloud { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+        .tag-btn { background: var(--layer); border: 1px solid var(--border); color: var(--text); padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s; }
+        .tag-btn.active { background: var(--accent); border-color: var(--accent); }
+        .article-card { background: var(--layer); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .article-card h2 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .article-card a { color: var(--accent); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">ZEHINLI</a>
+        <a href="index.html" style="color: var(--dim); text-decoration: none;"><i class="fa-solid fa-house"></i> На главную</a>
+    </header>
+    <div class="container">
+        <h1>Исследуйте по темам</h1>
+        <div class="tag-cloud" id="tags">
+            <button class="tag-btn active" onclick="filterByTag('all')">Все</button>
+        </div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let articles = [];
+        async function init() {
+            const list = await (await fetch('posts_list.json')).json();
+            const tagsDiv = document.getElementById('tags');
+            const uniqueTags = new Set();
+
+            for (const file of list) {
+                const art = await (await fetch(`content/${file}`)).json();
+                art.id = file.replace('.json', '');
+                articles.push(art);
+                if (art.tag) uniqueTags.add(art.tag);
+            }
+
+            uniqueTags.forEach(tag => {
+                tagsDiv.innerHTML += `<button class="tag-btn" onclick="filterByTag('${tag}')">${tag}</button>`;
+            });
+            render('all');
+        }
+
+        function render(tag) {
+            const out = document.getElementById('results');
+            out.innerHTML = '';
+            const filtered = tag === 'all' ? articles : articles.filter(a => a.tag === tag);
+            filtered.forEach(a => {
+                out.innerHTML += `<div class="article-card"><h2>${a.title}</h2><p style="color:var(--dim)">${a.description}</p><a href="article.html?id=${a.id}">Читать далее →</a></div>`;
+            });
+        }
+
+        function filterByTag(tag) {
+            document.querySelectorAll('.tag-btn').forEach(b => b.classList.toggle('active', b.innerText === tag || (tag === 'all' && b.innerText === 'Все')));
+            render(tag);
+        }
+        init();
+    </script>
+</body>
+</html>
