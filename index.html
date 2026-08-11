@@ -1,195 +1,427 @@
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="tk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
-    
-    <title>Zehinli — Научно-образовательный портал</title>
-    <meta name="description" content="Платформа Zehinli: свежие статьи о науке, астрофизике, биологии и технологиях.">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSK 1: Türkmen - Hytaý</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* --- ПЕРЕМЕННЫЕ --- */
-        :root {
-            --bg-ground: #0f0f0f;
-            --bg-layer-1: #1e1e1e;
-            --bg-layer-2: #2a2a2a;
-            --accent: #C8395F;
-            --accent-hover: #e0436d;
-            --text-main: #f2f2f2;
-            --text-dim: #b3b3b3;
-            --border-color: #333333;
-            --transition: all 0.3s ease;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        
+        .rotate-y-180 {
+            transform: rotateY(180deg);
         }
 
-        /* --- БАЗОВЫЕ СТИЛИ --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-ground); color: var(--text-main); font-family: 'Red Hat Display', sans-serif; line-height: 1.6; overflow-x: hidden; }
-        a { color: inherit; text-decoration: none; transition: var(--transition); }
-        a:hover { color: var(--accent); }
-
-        /* --- ШАПКА --- */
-        header { background: var(--bg-layer-1); border-bottom: 1px solid var(--border-color); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 26px; font-weight: 900; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; }
-        .header-nav { display: flex; gap: 20px; align-items: center; }
-        .header-nav a { color: var(--text-dim); font-weight: 600; }
-        .menu-toggle { display: none; background: none; border: none; color: var(--text-main); font-size: 24px; cursor: pointer; }
-
-        /* --- ОСНОВНОЙ ЛЕЙАУТ --- */
-        .mars-page { display: flex; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto; align-items: flex-start; }
-        
-        /* --- БОКОВОЕ МЕНЮ --- */
-        .side-menu { width: 260px; flex-shrink: 0; position: sticky; top: 90px; }
-        .nav-list { list-style: none; }
-        .nav-list a { display: flex; align-items: center; gap: 15px; padding: 12px 15px; border-radius: 8px; color: var(--text-main); font-weight: 600; margin-bottom: 5px; }
-        .nav-list a:hover, .nav-list a.active { background-color: var(--bg-layer-2); color: var(--accent); }
-        .nav-list i { width: 20px; text-align: center; font-size: 18px; }
-
-        /* --- ЦЕНТР И ПРАВАЯ КОЛОНКА --- */
-        .feed-container { flex-grow: 1; min-width: 0; }
-        .deimos-container { width: 300px; flex-shrink: 0; position: sticky; top: 90px; }
-
-        /* --- КАРТОЧКИ --- */
-        .card { background: var(--bg-layer-1); border-radius: 16px; padding: 24px; margin-bottom: 24px; border: 1px solid var(--border-color); transition: var(--transition); }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-color: #444; }
-        
-        h1 { font-size: 2rem; margin-bottom: 10px; }
-        h2 { font-size: 1.5rem; margin: 15px 0 10px; }
-        h3 { font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
-        
-        .text-muted { color: var(--text-dim); margin-bottom: 20px; }
-        .tag { color: var(--accent); font-weight: 900; font-size: 12px; letter-spacing: 1px; }
-        .article-image { width: 100%; height: 300px; border-radius: 10px; object-fit: cover; margin-bottom: 20px; }
-
-        .main-btn { display: inline-block; background-color: var(--accent); color: white; border: none; padding: 12px 28px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: var(--transition); }
-        .main-btn:hover { background-color: var(--accent-hover); transform: scale(1.02); }
-
-        /* --- СПИСКИ СПРАВА --- */
-        .trend-list { list-style: none; counter-reset: trend-counter; }
-        .trend-list li { position: relative; padding-left: 30px; margin-bottom: 15px; color: var(--text-dim); cursor: pointer; transition: var(--transition); }
-        .trend-list li::before { counter-increment: trend-counter; content: counter(trend-counter); position: absolute; left: 0; top: 0; font-weight: 900; color: var(--accent); font-size: 18px; }
-        .trend-list li:hover { color: var(--text-main); transform: translateX(5px); }
-
-        /* --- АДАПТИВНОСТЬ --- */
-        @media screen and (max-width: 1024px) { .deimos-container { display: none; } }
-        @media screen and (max-width: 768px) {
-            .menu-toggle { display: block; }
-            .header-nav { display: none; }
-            .mars-page { padding: 15px; }
-            .side-menu { position: fixed; top: 60px; left: -100%; width: 280px; height: calc(100vh - 60px); background: var(--bg-layer-1); border-right: 1px solid var(--border-color); z-index: 999; padding: 20px; transition: left 0.3s ease; }
-            .side-menu.active { left: 0; }
-            .card:hover { transform: none; }
-            .article-image { height: 200px; }
+        .card-transition {
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col text-gray-800">
 
-    <header>
-        <button class="menu-toggle" id="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
-        <a href="index.html" class="logo">ZEHINLI</a>
-        <nav class="header-nav">
-            <a href="search.html"><i class="fa-solid fa-magnifying-glass"></i> Поиск</a>
-            <a href="login.html"><i class="fa-solid fa-user"></i> Войти</a>
-        </nav>
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto max-w-3xl flex justify-between items-center">
+            <h1 class="text-2xl font-bold">HSK 1: Türkmen-Hytaý</h1>
+            <div class="flex space-x-2">
+                <button id="btnStudyMode" class="bg-blue-800 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors" onclick="setMode('study')">Okan (Study)</button>
+                <button id="btnQuizMode" class="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-lg text-sm font-semibold transition-colors" onclick="setMode('quiz')">Synag (Quiz)</button>
+            </div>
+        </div>
     </header>
 
-    <div class="mars-page">
+    <main class="flex-grow container mx-auto max-w-3xl p-4 flex flex-col items-center justify-center">
         
-        <aside class="side-menu" id="sidebar">
-            <div class="card" style="border: none; background: transparent; padding: 0;">
-                <ul class="nav-list">
-                    <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Главная</a></li>
-                    <li><a href="themes.html"><i class="fa-solid fa-book-open"></i> Темы</a></li>
-                    <li><a href="podcasts.html"><i class="fa-solid fa-podcast"></i> Подкасты</a></li>
-                    <li><a href="#"><i class="fa-solid fa-flask"></i> Эксперименты</a></li>
-                </ul>
-            </div>
-        </aside>
+        <!-- Progress Info -->
+        <div class="w-full flex justify-between mb-4 text-sm font-semibold text-gray-500">
+            <span id="cardCounter">Kart: 1 / 150</span>
+            <span id="scoreDisplay" class="hidden text-green-600">Dogry: 0</span>
+        </div>
 
-        <main class="feed-container">
-            <div class="card" style="background: linear-gradient(145deg, var(--bg-layer-1) 0%, #2a1018 100%);">
-                <h1>Taze ylmy habarlar!</h1>
-                <p class="text-muted">Добро пожаловать на Zehinli. Мы создаем будущее, основываясь на знаниях, критическом мышлении и научном подходе.</p>
-                <button class="main-btn" onclick="location.href='login.html'">Присоединиться</button>
-            </div>
+        <!-- Card Container -->
+        <div class="relative w-full h-80 perspective-1000 cursor-pointer group" id="cardContainer" onclick="handleCardClick()">
+            <div id="cardInner" class="w-full h-full relative transform-style-3d card-transition shadow-xl rounded-2xl">
+                
+                <!-- Front of Card (Turkmen) -->
+                <div class="absolute w-full h-full bg-white rounded-2xl backface-hidden flex flex-col items-center justify-center p-6 border-2 border-gray-100">
+                    <p class="text-gray-400 text-sm uppercase tracking-wider mb-4">Türkmen</p>
+                    <h2 id="cardFrontText" class="text-3xl md:text-5xl font-bold text-center text-blue-900 break-words w-full">söýmek</h2>
+                    <p id="clickHint" class="text-gray-400 text-sm mt-8 animate-pulse">Öwürmek üçin basyň</p>
+                </div>
 
-            <div id="articles-feed"></div> 
-        </main>
+                <!-- Back of Card (Chinese) -->
+                <div class="absolute w-full h-full bg-blue-50 rounded-2xl backface-hidden rotate-y-180 flex flex-col items-center justify-center p-6 border-2 border-blue-200">
+                    <p class="text-blue-400 text-sm uppercase tracking-wider mb-2">Hytaý</p>
+                    <h2 id="cardBackHanzi" class="text-7xl md:text-8xl font-bold text-gray-800 mb-4">爱</h2>
+                    <h3 id="cardBackPinyin" class="text-2xl md:text-3xl font-semibold text-blue-600">ài</h3>
+                </div>
 
-        <aside class="deimos-container">
-            <div class="card">
-                <h3>Тренды недели</h3>
-                <ul class="trend-list">
-                    <li>Топ 10 открытий года в квантовой физике</li>
-                    <li>Искусственный интеллект: друг или угроза?</li>
-                    <li>Новые миссии SpaceX на Марс</li>
-                    <li>Генетика и редактирование ДНК CRISPR</li>
-                </ul>
             </div>
+        </div>
 
-            <div class="card" style="text-align: center;">
-                <i class="fa-regular fa-envelope" style="font-size: 30px; color: var(--accent); margin-bottom: 15px;"></i>
-                <h3 style="border: none; padding: 0; margin-bottom: 10px;">Рассылка</h3>
-                <p class="text-muted" style="font-size: 14px;">Получайте лучшие научные статьи раз в неделю.</p>
-                <input type="email" placeholder="Ваш E-mail" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-ground); color: white; margin-bottom: 10px; outline: none;">
-                <button class="main-btn" style="width: 100%; padding: 10px;">Подписаться</button>
+        <!-- Quiz Input Area (Hidden by default) -->
+        <div id="quizArea" class="w-full mt-8 hidden flex-col items-center">
+            <div class="w-full flex">
+                <input type="text" id="quizInput" class="flex-grow text-xl p-4 border-2 border-gray-300 rounded-l-xl focus:outline-none focus:border-blue-500 transition-colors" placeholder="Iýeroglifi ýazyň (Напишите иероглиф)..." onkeypress="handleKeyPress(event)">
+                <button onclick="checkAnswer()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-r-xl font-bold text-lg transition-colors">Barlamak</button>
             </div>
-        </aside>
-    </div>
+            
+            <!-- Feedback Message -->
+            <div id="feedbackMessage" class="mt-4 text-xl font-bold hidden w-full text-center p-3 rounded-xl shadow-sm">
+                <!-- Message injected via JS -->
+            </div>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="flex space-x-4 mt-8 w-full justify-center">
+            <button onclick="prevCard()" class="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 border border-gray-300 rounded-xl shadow-sm transition-colors flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                Öňki
+            </button>
+            <button onclick="shuffleCards()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 border border-gray-300 rounded-xl shadow-sm transition-colors" title="Gatmak (Shuffle)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8L12 12m0 0l4 4m-4-4l-4 4m4-4L8 8"></path></svg>
+            </button>
+            <button onclick="nextCard()" id="btnNext" class="bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 border border-gray-300 rounded-xl shadow-sm transition-colors flex items-center">
+                Indiki
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+        </div>
+    </main>
 
     <script>
-        // Меню для мобилок
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const sidebar = document.getElementById('sidebar');
+        // HSK 1 Vocabulary List
+        const originalVocab = [
+            { tk: "söýmek", hz: "爱", py: "ài" },
+            { tk: "sekiz", hz: "八", py: "bā" },
+            { tk: "kaka", hz: "爸爸", py: "bà ba" },
+            { tk: "käse / bulgur", hz: "杯子", py: "bēi zi" },
+            { tk: "Pekin", hz: "北京", py: "běi jīng" },
+            { tk: "jilt (kitaplar üçin)", hz: "本", py: "běn" },
+            { tk: "baş üstüne", hz: "不客气", py: "bú kè qì" },
+            { tk: "ýok, däl", hz: "不", py: "bù" },
+            { tk: "nahar / gök önüm", hz: "菜", py: "cài" },
+            { tk: "çaý", hz: "茶", py: "chá" },
+            { tk: "iýmek", hz: "吃", py: "chī" },
+            { tk: "taksi", hz: "出租车", py: "chū zū chē" },
+            { tk: "jaň etmek", hz: "打电话", py: "dǎ diàn huà" },
+            { tk: "uly", hz: "大", py: "dà" },
+            { tk: "-nyň, -niň (degişlilik)", hz: "的", py: "de" },
+            { tk: "sagat (wagt)", hz: "点", py: "diǎn" },
+            { tk: "kompyuter", hz: "电脑", py: "diàn nǎo" },
+            { tk: "telewizor", hz: "电视", py: "diàn shì" },
+            { tk: "kino", hz: "电影", py: "diàn yǐng" },
+            { tk: "zat", hz: "东西", py: "dōng xi" },
+            { tk: "hemmesi, hem", hz: "都", py: "dōu" },
+            { tk: "okamak", hz: "读", py: "dú" },
+            { tk: "bagyşlaň", hz: "对不起", py: "duì bu qǐ" },
+            { tk: "köp", hz: "多", py: "duō" },
+            { tk: "näçe", hz: "多少", py: "duō shao" },
+            { tk: "ogul", hz: "儿子", py: "ér zi" },
+            { tk: "iki", hz: "二", py: "èr" },
+            { tk: "restoran", hz: "饭店", py: "fàn diàn" },
+            { tk: "uçar", hz: "飞机", py: "fēi jī" },
+            { tk: "şat, begençli", hz: "高兴", py: "gāo xìng" },
+            { tk: "sany", hz: "个", py: "gè" },
+            { tk: "iş, işlemek", hz: "工作", py: "gōng zuò" },
+            { tk: "it", hz: "狗", py: "gǒu" },
+            { tk: "hytaý dili", hz: "汉语", py: "hàn yǔ" },
+            { tk: "gowy", hz: "好", py: "hǎo" },
+            { tk: "içmek", hz: "喝", py: "hē" },
+            { tk: "we", hz: "和", py: "hé" },
+            { tk: "örän", hz: "很", py: "hěn" },
+            { tk: "arka, yz", hz: "后面", py: "hòu mian" },
+            { tk: "dolanmak", hz: "回", py: "huí" },
+            { tk: "başarmak, bilmek", hz: "会", py: "huì" },
+            { tk: "demir ýol wokzaly", hz: "火车站", py: "huǒ chē zhàn" },
+            { tk: "näçe", hz: "几", py: "jǐ" },
+            { tk: "ýaş", hz: "岁", py: "suì" },
+            { tk: "öý, maşgala", hz: "家", py: "jiā" },
+            { tk: "atlandyrmak, çagyrmak", hz: "叫", py: "jiào" },
+            { tk: "şu gün", hz: "今天", py: "jīn tiān" },
+            { tk: "dokuz", hz: "九", py: "jiǔ" },
+            { tk: "açmak", hz: "开", py: "kāi" },
+            { tk: "seretmek, görmek", hz: "看", py: "kàn" },
+            { tk: "görmek", hz: "看见", py: "kàn jiàn" },
+            { tk: "bölek", hz: "块", py: "kuài" },
+            { tk: "gelmek", hz: "来", py: "lái" },
+            { tk: "mugallym", hz: "老师", py: "lǎo shī" },
+            { tk: "sowuk", hz: "冷", py: "lěng" },
+            { tk: "iç, içinde", hz: "里", py: "lǐ" },
+            { tk: "nol", hz: "零", py: "líng" },
+            { tk: "alty", hz: "六", py: "liù" },
+            { tk: "eje", hz: "妈妈", py: "mā ma" },
+            { tk: "ma/-mi", hz: "吗", py: "ma" },
+            { tk: "satyn almak", hz: "买", py: "mǎi" },
+            { tk: "pişik", hz: "猫", py: "māo" },
+            { tk: "ýok (bolmazlyk)", hz: "没", py: "méi" },
+            { tk: "zyýany ýok", hz: "没关系", py: "méi guān xi" },
+            { tk: "bürünç / bişen tüwi", hz: "米饭", py: "mǐ fàn" },
+            { tk: "at (ady)", hz: "名字", py: "míng zi" },
+            { tk: "ertir", hz: "明天", py: "míng tiān" },
+            { tk: "nirede", hz: "哪儿", py: "nǎ'er" },
+            { tk: "ol, şol", hz: "那", py: "nà" },
+            { tk: "-a/-ä", hz: "呢", py: "ne" },
+            { tk: "bilmek, başarmak", hz: "能", py: "néng" },
+            { tk: "sen", hz: "你", py: "nǐ" },
+            { tk: "siz", hz: "你们", py: "nǐ men" },
+            { tk: "ýyl", hz: "年", py: "nián" },
+            { tk: "gyz (perzent)", hz: "女儿", py: "nǚ ' ér" },
+            { tk: "dost", hz: "朋友", py: "péng you" },
+            { tk: "alma", hz: "苹果", py: "píng guǒ" },
+            { tk: "ýedi", hz: "七", py: "qī" },
+            { tk: "pul", hz: "钱", py: "qián" },
+            { tk: "öň, öňünde", hz: "前面", py: "qián mian" },
+            { tk: "haýyş edýärin", hz: "请", py: "qǐng" },
+            { tk: "gitmek", hz: "去", py: "qù" },
+            { tk: "yssy", hz: "热", py: "rè" },
+            { tk: "adam", hz: "人", py: "rén" },
+            { tk: "tanyşmak, tanamak", hz: "认识", py: "rèn shi" },
+            { tk: "gün", hz: "日", py: "rì" },
+            { tk: "üç", hz: "三", py: "sān" },
+            { tk: "dükan", hz: "商店", py: "shāng diàn" },
+            { tk: "ýokary", hz: "上", py: "shàng" },
+            { tk: "irden", hz: "上午", py: "shàng wǔ" },
+            { tk: "az", hz: "少", py: "shǎo" },
+            { tk: "näme", hz: "什么", py: "shén me" },
+            { tk: "on", hz: "十", py: "shí" },
+            { tk: "wagt", hz: "时候", py: "shí hou" },
+            { tk: "bolmak", hz: "是", py: "shì" },
+            { tk: "kitap", hz: "书", py: "shū" },
+            { tk: "kim", hz: "谁", py: "shuí" },
+            { tk: "suw", hz: "水", py: "shuǐ" },
+            { tk: "miwe", hz: "水果", py: "shuǐ guǒ" },
+            { tk: "uklamak, ýatmak", hz: "睡觉", py: "shuì jiào" },
+            { tk: "gürlemek", hz: "说话", py: "shuō huà" },
+            { tk: "dört", hz: "四", py: "sì" },
+            { tk: "ol (erkekler üçin)", hz: "他", py: "tā" },
+            { tk: "ol (aýallar üçin)", hz: "她", py: "tā" },
+            { tk: "olar", hz: "他们", py: "tā men" },
+            { tk: "olar (diňe aýallar)", hz: "她们", py: "tā men" },
+            { tk: "gaty, aşa", hz: "太", py: "tài" },
+            { tk: "howa", hz: "天气", py: "tiān qì" },
+            { tk: "diňlemek", hz: "听", py: "tīng" },
+            { tk: "synpdaş", hz: "同学", py: "tóng xué" },
+            { tk: "men", hz: "我", py: "wǒ" },
+            { tk: "biz", hz: "我们", py: "wǒ men" },
+            { tk: "bäş", hz: "五", py: "wǔ" },
+            { tk: "halamak", hz: "喜欢", py: "xǐ huan" },
+            { tk: "aşak", hz: "下", py: "xià" },
+            { tk: "öýlän", hz: "下午", py: "xià wǔ" },
+            { tk: "ýagyş ýagmak", hz: "下雨", py: "xià yǔ" },
+            { tk: "jenap", hz: "先生", py: "xiān sheng" },
+            { tk: "häzir", hz: "现在", py: "xiàn zài" },
+            { tk: "pikir etmek, islemek", hz: "想", py: "xiǎng" },
+            { tk: "kiçi", hz: "小", py: "xiǎo" },
+            { tk: "hanym", hz: "小姐", py: "xiǎo jie" },
+            { tk: "käbir", hz: "些", py: "xiē" },
+            { tk: "ýazmak", hz: "写", py: "xiě" },
+            { tk: "sag boluň", hz: "谢谢", py: "xiè xie" },
+            { tk: "hepde", hz: "星期", py: "xīng qī" },
+            { tk: "okuwçy, talyby", hz: "学生", py: "xué sheng" },
+            { tk: "okamak, öwrenmek", hz: "学习", py: "xué xí" },
+            { tk: "mekdep", hz: "学校", py: "xué xiào" },
+            { tk: "bir", hz: "一", py: "yī" },
+            { tk: "eşik", hz: "衣服", py: "yī fu" },
+            { tk: "lukman", hz: "医生", py: "yī shēng" },
+            { tk: "hassahana", hz: "医院", py: "yī yuàn" },
+            { tk: "oturgyç", hz: "椅子", py: "yǐ zi" },
+            { tk: "bar bolmak, eýe bolmak", hz: "有", py: "yǒu" },
+            { tk: "aý", hz: "月", py: "yuè" },
+            { tk: "-da, -de", hz: "在", py: "zài" },
+            { tk: "hoşlaşmak", hz: "再见", py: "zài jiàn" },
+            { tk: "nähili", hz: "怎么", py: "zěn me" },
+            { tk: "nähili ýagdaý", hz: "怎么样", py: "zěn me yàng" },
+            { tk: "bu", hz: "这", py: "zhè" },
+            { tk: "Hytaý", hz: "中国", py: "zhōng guó" },
+            { tk: "günortan", hz: "中午", py: "zhōng wǔ" },
+            { tk: "ýaşamak", hz: "住", py: "zhù" },
+            { tk: "stol", hz: "桌子", py: "zhuō zi" },
+            { tk: "iýeroglif", hz: "字", py: "zì" },
+            { tk: "düýn", hz: "昨天", py: "zuó tiān" },
+            { tk: "etmek", hz: "做", py: "zuò" },
+            { tk: "oturmak", hz: "坐", py: "zuò" }
+        ];
 
-        mobileBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            const icon = mobileBtn.querySelector('i');
-            if (sidebar.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-xmark');
+        let vocab = [...originalVocab];
+        let currentIndex = 0;
+        let isFlipped = false;
+        let currentMode = 'study'; // 'study' or 'quiz'
+        let quizScore = 0;
+        let quizAttempted = false;
+
+        // DOM Elements
+        const cardInner = document.getElementById('cardInner');
+        const cardFrontText = document.getElementById('cardFrontText');
+        const cardBackHanzi = document.getElementById('cardBackHanzi');
+        const cardBackPinyin = document.getElementById('cardBackPinyin');
+        const cardCounter = document.getElementById('cardCounter');
+        
+        const clickHint = document.getElementById('clickHint');
+        const quizArea = document.getElementById('quizArea');
+        const quizInput = document.getElementById('quizInput');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        
+        const btnStudyMode = document.getElementById('btnStudyMode');
+        const btnQuizMode = document.getElementById('btnQuizMode');
+        const btnNext = document.getElementById('btnNext');
+        const cardContainer = document.getElementById('cardContainer');
+
+        function renderCard() {
+            // Reset state
+            if(isFlipped) flipCard(false);
+            
+            // Populate data
+            const word = vocab[currentIndex];
+            cardFrontText.textContent = word.tk;
+            cardBackHanzi.textContent = word.hz;
+            cardBackPinyin.textContent = word.py;
+            
+            // Update UI
+            cardCounter.textContent = `Kart: ${currentIndex + 1} / ${vocab.length}`;
+            quizInput.value = '';
+            feedbackMessage.classList.add('hidden');
+            quizAttempted = false;
+            
+            if (currentMode === 'quiz') {
+                quizInput.focus();
+                btnNext.innerHTML = 'Bökmek (Skip) <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
             } else {
-                icon.classList.remove('fa-xmark');
-                icon.classList.add('fa-bars');
-            }
-        });
-
-        // Загрузка статей из JSON
-        async function loadArticles() {
-            const feed = document.getElementById('articles-feed');
-            try {
-                const listResponse = await fetch('posts_list.json');
-                const filesList = await listResponse.json();
-                
-                for (const fileName of filesList) {
-                    const articleResponse = await fetch(`content/${fileName}`);
-                    const article = await articleResponse.json();
-                    const articleId = fileName.replace('.json', '');
-                    
-                    const cardHTML = `
-                        <div class="card">
-                            <img src="${article.image}" alt="${article.title}" class="article-image">
-                            <span class="tag">${article.tag}</span>
-                            <h2>${article.title}</h2>
-                            <p class="text-muted">${article.description}</p>
-                            
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                                <span style="font-size: 13px; color: var(--text-dim);"><i class="fa-regular fa-clock"></i> ${article.readTime}</span>
-                                <a href="article.html?id=${articleId}" style="color: var(--accent); font-weight: bold;">Читать далее <i class="fa-solid fa-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    `;
-                    feed.insertAdjacentHTML('beforeend', cardHTML);
-                }
-            } catch (error) {
-                console.error("Ошибка при загрузке статей:", error);
-                feed.innerHTML = '<p style="text-align:center; color: var(--text-dim);">Не удалось загрузить новости.</p>';
+                btnNext.innerHTML = 'Indiki <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
             }
         }
-        loadArticles();
+
+        function flipCard(forceState = null) {
+            if (forceState !== null) {
+                isFlipped = forceState;
+            } else {
+                isFlipped = !isFlipped;
+            }
+            
+            if (isFlipped) {
+                cardInner.classList.add('rotate-y-180');
+            } else {
+                cardInner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function handleCardClick() {
+            // Only allow clicking to flip in study mode, or if answer was attempted in quiz mode
+            if (currentMode === 'study' || (currentMode === 'quiz' && quizAttempted)) {
+                flipCard();
+            }
+        }
+
+        function nextCard() {
+            currentIndex++;
+            if (currentIndex >= vocab.length) {
+                currentIndex = 0; // Loop back to start
+            }
+            renderCard();
+        }
+
+        function prevCard() {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = vocab.length - 1; // Loop to end
+            }
+            renderCard();
+        }
+
+        function shuffleCards() {
+            // Fisher-Yates Shuffle
+            for (let i = vocab.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [vocab[i], vocab[j]] = [vocab[j], vocab[i]];
+            }
+            currentIndex = 0;
+            renderCard();
+        }
+
+        function checkAnswer() {
+            if(quizAttempted) return; // Prevent multiple checks on same card
+            
+            const answer = quizInput.value.trim();
+            const correctHanzi = vocab[currentIndex].hz;
+            
+            quizAttempted = true;
+            feedbackMessage.classList.remove('hidden');
+            
+            if (answer === correctHanzi) {
+                // Correct
+                feedbackMessage.textContent = 'Dogry! (Правильно!)';
+                feedbackMessage.className = 'mt-4 text-xl font-bold w-full text-center p-3 rounded-xl shadow-sm bg-green-100 text-green-700 border-2 border-green-300';
+                quizScore++;
+                scoreDisplay.textContent = `Dogry: ${quizScore}`;
+            } else {
+                // Incorrect
+                feedbackMessage.textContent = `Ýalňyş. Dogry jogap: ${correctHanzi} (${vocab[currentIndex].py})`;
+                feedbackMessage.className = 'mt-4 text-lg font-bold w-full text-center p-3 rounded-xl shadow-sm bg-red-100 text-red-700 border-2 border-red-300';
+            }
+            
+            // Show the back of the card
+            flipCard(true);
+            btnNext.innerHTML = 'Indiki <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                if(quizAttempted) {
+                   nextCard(); 
+                } else {
+                   checkAnswer();
+                }
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            if (mode === 'study') {
+                btnStudyMode.classList.replace('bg-blue-500', 'bg-blue-800');
+                btnQuizMode.classList.replace('bg-blue-800', 'bg-blue-500');
+                
+                quizArea.classList.add('hidden');
+                clickHint.classList.remove('hidden');
+                scoreDisplay.classList.add('hidden');
+                cardContainer.classList.add('cursor-pointer');
+            } else {
+                btnQuizMode.classList.replace('bg-blue-500', 'bg-blue-800');
+                btnStudyMode.classList.replace('bg-blue-800', 'bg-blue-500');
+                
+                quizArea.classList.remove('hidden');
+                quizArea.classList.add('flex');
+                clickHint.classList.add('hidden');
+                scoreDisplay.classList.remove('hidden');
+                cardContainer.classList.remove('cursor-pointer');
+                
+                quizScore = 0;
+                scoreDisplay.textContent = `Dogry: ${quizScore}`;
+            }
+            // Reset to beginning of current deck state when switching modes
+            renderCard();
+        }
+
+        // Initialize App
+        window.onload = () => {
+            renderCard();
+        };
     </script>
 </body>
 </html>
