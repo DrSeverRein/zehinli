@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zehinli.org | Desmos Lab — Построитель графиков функций</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --bg-primary: #0b0c0e;
+            --bg-secondary: #121418;
+            --bg-header: #16181d;
+            --bg-card: #181a20;
+            --bg-elevated: #22252e;
+            --border-color: #262932;
+            --text-primary: #f0f3f8;
+            --text-secondary: #949ba6;
+            --grid-line: #1f2430;
+            --axis-line: #64748b;
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-elevated: #f1f5f9;
+            --border-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --grid-line: #e2e8f0;
+            --axis-line: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .font-mono-math { font-family: 'JetBrains Mono', monospace; }
+        .portal-header { background-color: var(--bg-header); border-bottom: 1px solid var(--border-color); }
+        .portal-sidebar { background-color: var(--bg-card); border-right: 1px solid var(--border-color); }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ DESMOS LAB -->
+    <header class="portal-header h-14 px-4 lg:px-6 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-4">
+            <a href="./index.html" class="text-xs sm:text-sm font-semibold hover:text-indigo-500 flex items-center gap-2 transition">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>На главную</span>
+            </a>
+            <div class="h-5 w-[1px] bg-[var(--border-color)]"></div>
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-indigo-500"></i>
+                <span class="text-sm font-bold">Zehinli Grapher (Desmos Mode)</span>
+            </div>
+        </div>
+
+        <!-- Быстрые пресеты графиков -->
+        <div class="hidden md:flex items-center gap-2 text-xs">
+            <span class="text-[var(--text-secondary)]">Примеры:</span>
+            <button onclick="loadPreset('trig')" class="px-2.5 py-1 rounded bg-[var(--bg-elevated)] hover:bg-indigo-600 hover:text-white transition">Тригонометрия</button>
+            <button onclick="loadPreset('poly')" class="px-2.5 py-1 rounded bg-[var(--bg-elevated)] hover:bg-indigo-600 hover:text-white transition">Парабола и Куб</button>
+            <button onclick="loadPreset('damped')" class="px-2.5 py-1 rounded bg-[var(--bg-elevated)] hover:bg-indigo-600 hover:text-white transition">Затухающая волна</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="resetViewport()" title="Центрировать оси (0,0)" class="px-3 py-1.5 rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] text-xs font-medium hover:border-indigo-500">
+                <i class="fa-solid fa-crosshairs mr-1"></i> Центр (0,0)
+            </button>
+            <button onclick="toggleTheme()" class="px-3 py-1.5 rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] text-xs font-medium">
+                <i class="fa-solid fa-circle-half-stroke text-amber-500"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- РАБОЧАЯ ОБЛАСТЬ: СЛЕВА ФОРМУЛЫ, СПРАВА ИНТЕРАКТИВНЫЙ ГРАФИК -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- Левая панель ввода функций (как в Desmos) -->
+        <aside class="portal-sidebar w-full md:w-80 lg:w-96 flex flex-col h-64 md:h-full shrink-0">
+            <div class="p-3 border-b border-[var(--border-color)] flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Список функций y = f(x)</span>
+                <button onclick="addExpression('')" class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus"></i> Добавить f(x)
+                </button>
+            </div>
+
+            <!-- Контейнер строк с формулами -->
+            <div id="expressionsList" class="flex-1 overflow-y-auto divide-y divide-[var(--border-color)]"></div>
+
+            <!-- Мини-шпаргалка по синтаксису внизу панели -->
+            <div class="p-3 bg-[var(--bg-secondary)] border-t border-[var(--border-color)] text-[11px] text-[var(--text-secondary)] font-mono-math space-y-1">
+                <div>Поддержка: <span class="text-indigo-400">sin(x), cos(x), tan(x), sqrt(x), abs(x)</span></div>
+                <div>Степень: <span class="text-indigo-400">x^2</span> • Константы: <span class="text-indigo-400">pi, e</span></div>
+            </div>
+        </aside>
+
+        <!-- Правый холст графика -->
+        <div class="flex-1 relative bg-[var(--bg-primary)] overflow-hidden">
+            <canvas id="graphCanvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+
+            <!-- Кнопки масштаба в правом нижнем углу -->
+            <div class="absolute right-4 bottom-4 flex flex-col gap-1.5">
+                <button onclick="zoomGraph(1.25)" class="w-9 h-9 rounded-lg bg-[var(--bg-card)] border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:border-indigo-500">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                </button>
+                <button onclick="zoomGraph(0.8)" class="w-9 h-9 rounded-lg bg-[var(--bg-card)] border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:border-indigo-500">
+                    <i class="fa-solid fa-minus text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Синхронизация темы
+        const htmlEl = document.documentElement;
+        function applyTheme(t) {
+            htmlEl.setAttribute('data-theme', t);
+            localStorage.setItem('zehinli_theme', t);
+            drawGraph();
+        }
+        function toggleTheme() {
+            applyTheme((htmlEl.getAttribute('data-theme') || 'dark') === 'dark' ? 'light' : 'dark');
+        }
+
+        // 2. Состояние функций и цветов
+        const palette = ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#a855f7', '#06b6d4'];
+        let expressions = [
+            { id: 1, expr: 'sin(x)', color: '#3b82f6', visible: true },
+            { id: 2, expr: '0.25 * x^2 - 2', color: '#10b981', visible: true }
+        ];
+
+        // Параметры камеры холста (пикселей на единицу и смещение центра)
+        const canvas = document.getElementById('graphCanvas');
+        const ctx = canvas.getContext('2d');
+        let scale = 60; // 60px = 1 единица
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function renderExpressionsUI() {
+            const list = document.getElementById('expressionsList');
+            list.innerHTML = expressions.map((item, idx) => `
+                <div class="p-3 flex items-center gap-3 bg-[var(--bg-card)]">
+                    <button onclick="toggleExprVisibility(${item.id})" class="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0" style="border-color: ${item.color}; background-color: ${item.visible ? item.color : 'transparent'}"></button>
+                    <span class="text-xs font-mono-math text-[var(--text-secondary)]">y =</span>
+                    <input type="text" value="${item.expr}" oninput="updateExpression(${item.id}, this.value)" placeholder="Например: cos(x) + x/2" class="flex-1 bg-transparent text-sm font-mono-math focus:outline-none border-b border-transparent focus:border-indigo-500 py-1">
+                    <button onclick="removeExpression(${item.id})" class="text-xs text-[var(--text-secondary)] hover:text-rose-500 px-1.5">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addExpression(defaultFormula = 'cos(x)') {
+            const nextColor = palette[expressions.length % palette.length];
+            expressions.push({ id: Date.now(), expr: defaultFormula, color: nextColor, visible: true });
+            renderExpressionsUI();
+            drawGraph();
+        }
+
+        function updateExpression(id, val) {
+            const target = expressions.find(e => e.id === id);
+            if (target) {
+                target.expr = val;
+                drawGraph();
+            }
+        }
+
+        function toggleExprVisibility(id) {
+            const target = expressions.find(e => e.id === id);
+            if (target) {
+                target.visible = !target.visible;
+                renderExpressionsUI();
+                drawGraph();
+            }
+        }
+
+        function removeExpression(id) {
+            expressions = expressions.filter(e => e.id !== id);
+            renderExpressionsUI();
+            drawGraph();
+        }
+
+        // Парсер математической строки в вычисляемую JS-функцию
+        function compileMath(rawStr) {
+            if (!rawStr || !rawStr.trim()) return null;
+            let s = rawStr.toLowerCase().trim()
+                .replace(/\^/g, '**')
+                .replace(/\bsin\b/g, 'Math.sin')
+                .replace(/\bcos\b/g, 'Math.cos')
+                .replace(/\btan\b/g, 'Math.tan')
+                .replace(/\bsqrt\b/g, 'Math.sqrt')
+                .replace(/\babs\b/g, 'Math.abs')
+                .replace(/\bln\b/g, 'Math.log')
+                .replace(/\blog\b/g, 'Math.log10')
+                .replace(/\bexp\b/g, 'Math.exp')
+                .replace(/\bpi\b/g, 'Math.PI')
+                .replace(/\be\b/g, 'Math.E');
+            try {
+                return new Function('x', `return ${s};`);
+            } catch {
+                return null;
+            }
+        }
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            drawGraph();
+        }
+
+        function drawGraph() {
+            if (!canvas.width) return;
+            const w = canvas.width;
+            const h = canvas.height;
+            const centerX = w / 2 + offsetX;
+            const centerY = h / 2 + offsetY;
+
+            const styles = getComputedStyle(document.documentElement);
+            const gridColor = styles.getPropertyValue('--grid-line').trim() || '#222';
+            const axisColor = styles.getPropertyValue('--axis-line').trim() || '#666';
+            const textColor = styles.getPropertyValue('--text-secondary').trim() || '#888';
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Сетка
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = gridColor;
+            ctx.fillStyle = textColor;
+            ctx.font = '11px JetBrains Mono, monospace';
+
+            const startX = Math.floor(-centerX / scale);
+            const endX = Math.ceil((w - centerX) / scale);
+            for (let i = startX; i <= endX; i++) {
+                const px = centerX + i * scale;
+                ctx.beginPath();
+                ctx.moveTo(px, 0);
+                ctx.lineTo(px, h);
+                ctx.stroke();
+                if (i !== 0 && scale >= 30) {
+                    ctx.fillText(i, px + 4, Math.min(Math.max(centerY + 14, 15), h - 6));
+                }
+            }
+
+            const startY = Math.floor(-centerY / scale);
+            const endY = Math.ceil((h - centerY) / scale);
+            for (let j = startY; j <= endY; j++) {
+                const py = centerY + j * scale;
+                ctx.beginPath();
+                ctx.moveTo(0, py);
+                ctx.lineTo(w, py);
+                ctx.stroke();
+                if (j !== 0 && scale >= 30) {
+                    ctx.fillText(-j, Math.min(Math.max(centerX + 6, 6), w - 25), py - 4);
+                }
+            }
+
+            // Главные оси X и Y
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = axisColor;
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(w, centerY);
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, h);
+            ctx.stroke();
+
+            // Отрисовка кривых функций
+            expressions.forEach(item => {
+                if (!item.visible) return;
+                const fn = compileMath(item.expr);
+                if (!fn) return;
+
+                ctx.lineWidth = 2.5;
+                ctx.strokeStyle = item.color;
+                ctx.beginPath();
+
+                let isDrawing = false;
+                for (let px = 0; px <= w; px += 2) {
+                    const xVal = (px - centerX) / scale;
+                    let yVal;
+                    try {
+                        yVal = fn(xVal);
+                    } catch {
+                        isDrawing = false;
+                        continue;
+                    }
+
+                    if (typeof yVal === 'number' && isFinite(yVal)) {
+                        const py = centerY - yVal * scale;
+                        if (py >= -h && py <= h * 2) {
+                            if (!isDrawing) {
+                                ctx.moveTo(px, py);
+                                isDrawing = true;
+                            } else {
+                                ctx.lineTo(px, py);
+                            }
+                        } else {
+                            isDrawing = false;
+                        }
+                    } else {
+                        isDrawing = false;
+                    }
+                }
+                ctx.stroke();
+            });
+        }
+
+        // Перетаскивание графика мышью и зум колесиком
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragStart = { x: e.clientX - offsetX, y: e.clientY - offsetY };
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            offsetX = e.clientX - dragStart.x;
+            offsetY = e.clientY - dragStart.y;
+            drawGraph();
+        });
+        window.addEventListener('mouseup', () => isDragging = false);
+
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            zoomGraph(e.deltaY < 0 ? 1.12 : 0.88);
+        });
+
+        function zoomGraph(factor) {
+            scale = Math.min(Math.max(scale * factor, 15), 300);
+            drawGraph();
+        }
+
+        function resetViewport() {
+            scale = 60;
+            offsetX = 0;
+            offsetY = 0;
+            drawGraph();
+        }
+
+        function loadPreset(type) {
+            if (type === 'trig') {
+                expressions = [
+                    { id: 1, expr: 'sin(x)', color: '#3b82f6', visible: true },
+                    { id: 2, expr: 'cos(x)', color: '#10b981', visible: true },
+                    { id: 3, expr: 'sin(2*x)/2', color: '#f59e0b', visible: true }
+                ];
+            } else if (type === 'poly') {
+                expressions = [
+                    { id: 1, expr: 'x^2 - 3', color: '#3b82f6', visible: true },
+                    { id: 2, expr: '0.2 * x^3 - x', color: '#ec4899', visible: true }
+                ];
+            } else if (type === 'damped') {
+                expressions = [
+                    { id: 1, expr: 'exp(-0.2*abs(x)) * cos(3*x) * 3', color: '#a855f7', visible: true }
+                ];
+            }
+            renderExpressionsUI();
+            drawGraph();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        applyTheme(localStorage.getItem('zehinli_theme') || 'dark');
+        renderExpressionsUI();
+        setTimeout(resizeCanvas, 50);
+    </script>
+</body>
+</html>
