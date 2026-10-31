@@ -1,127 +1,442 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="zh-CN" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0">
-    <title>Загрузка статьи... - Zehinli</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;600;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职业生涯发展报告 - 团队信息收集 | Zehinli.org</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключение SDK Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'hit-blue': '#005696',
+                        'hit-dark': '#003d6b',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
         :root {
-            --bg-ground: #0f0f0f;
-            --bg-layer-1: #1e1e1e;
-            --accent: #C8395F;
-            --text-main: #f2f2f2;
-            --text-dim: #b3b3b3;
-            --border-color: #333333;
+            /* Мягко-белая тема */
+            --bg-main: #eceae4;
+            --bg-header: #f5f4f0;
+            --bg-card: #f7f6f2;
+            --bg-input: #ffffff;
+            --text-primary: #1e2024;
+            --border-color: #d6d3cb;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html.dark {
+            /* Темная тема */
+            --bg-main: #0b0c0e;
+            --bg-header: #121317;
+            --bg-card: #181a20;
+            --bg-input: #1f222a;
+            --text-primary: #f1f3f5;
+            --border-color: #262932;
+        }
+
         body {
-            background-color: var(--bg-ground);
-            color: var(--text-main);
-            font-family: 'Red Hat Display', sans-serif;
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
-        header {
-            background: var(--bg-layer-1);
+
+        .portal-header {
+            background-color: var(--bg-header);
             border-bottom: 1px solid var(--border-color);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
-        .logo { font-size: 26px; font-weight: 900; color: var(--accent); text-decoration: none;}
-        
-        /* Стили для чтения статьи */
-        .article-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
+
+        .portal-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
         }
-        .back-link {
-            display: inline-block;
-            color: var(--text-dim);
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-weight: 600;
+
+        .portal-input {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
         }
-        .back-link:hover { color: var(--accent); }
-        .article-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 16px;
-            margin-bottom: 20px;
-        }
-        .tag { color: var(--accent); font-weight: 900; font-size: 14px; letter-spacing: 1px; }
-        h1 { font-size: 2.5rem; margin: 10px 0 20px; line-height: 1.2; }
-        .article-text {
-            font-size: 1.1rem;
-            color: #d1d1d1;
-            line-height: 1.8;
+
+        .portal-input:focus {
+            outline: none;
+            border-color: #005696;
+            box-shadow: 0 0 0 2px rgba(0, 86, 150, 0.25);
         }
     </style>
 </head>
-<body>
+<body class="antialiased min-h-screen pb-16">
 
-    <header>
-        <a href="index.html" class="logo">ZEHINLI</a>
+    <!-- Всплывающее уведомление -->
+    <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 opacity-0 pointer-events-none">
+        <div id="toast-message" class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-xl font-medium text-sm md:text-base text-center">
+            操作成功
+        </div>
+    </div>
+
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ С КНОПКОЙ ВОЗВРАТА НА ГЛАВНУЮ И СМЕНОЙ ТЕМЫ -->
+    <header class="portal-header sticky top-0 z-40 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="./index.html" class="flex items-center space-x-2 text-xs md:text-sm font-semibold hover:text-hit-blue transition">
+                <span>← 返回校园门户 (На главную Zehinli.org)</span>
+            </a>
+
+            <div class="flex items-center space-x-3">
+                <span id="dbStatusBadge" class="px-2.5 py-1 rounded-full text-xs bg-amber-500/20 text-amber-400 font-medium">
+                    Локальный режим
+                </span>
+
+                <!-- КНОПКА СОЛНЦЕ / ЛУНА -->
+                <button onclick="toggleTheme()" title="Переключить тему" class="p-2 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-all">
+                    <svg id="sunIcon" class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <svg id="moonIcon" class="w-5 h-5 text-slate-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <main class="article-container" id="article-content">
-        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Назад на главную</a>
-        
-        <div id="loading" style="text-align: center; margin-top: 50px; color: var(--text-dim);">Загружаем знания...</div>
+    <!-- БАННЕР СТРАНИЦЫ АНКЕТЫ -->
+    <div class="bg-hit-blue text-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-2xl md:text-3xl font-bold">哈尔滨工业大学</h1>
+            <h2 class="text-base md:text-xl font-medium mt-1.5 opacity-90">《职业生涯发展报告》团队信息收集</h2>
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ АНКЕТЫ -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+
+        <!-- Важное примечание -->
+        <div class="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 mb-8 rounded-r-lg">
+            <div class="flex items-start">
+                <span class="text-xl mr-3">⚠️</span>
+                <div>
+                    <h3 class="text-sm font-bold text-yellow-600 dark:text-yellow-400">队长重要提示：</h3>
+                    <p class="text-xs md:text-sm mt-1">
+                        实践任务的照片（招聘会截图和职场访谈合影）请直接通过微信发给队长！此处仅收集文字内容。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма -->
+        <div class="portal-card shadow-xl rounded-xl overflow-hidden mb-12">
+            <div class="border-b border-gray-500/20 px-6 py-4 flex justify-between items-center">
+                <h3 class="text-lg font-semibold">填写你的个人部分</h3>
+                <span class="text-xs opacity-60">* Обязательные поля</span>
+            </div>
+
+            <form id="dataForm" class="p-6 md:p-8 space-y-8">
+                <!-- Первая часть -->
+                <div>
+                    <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第一部分：职业目标</h4>
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <div>
+                            <label for="nameMajor" class="block text-sm font-medium mb-1">1. 姓名和专业 <span class="text-red-500">*</span></label>
+                            <input type="text" id="nameMajor" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="例如：张三 - 机器人工程">
+                        </div>
+                        <div>
+                            <label for="talentType" class="block text-sm font-medium mb-1">3. 契合的杰出人才类型 <span class="text-red-500">*</span></label>
+                            <select id="talentType" required class="portal-input block w-full rounded-md p-2.5 text-sm">
+                                <option value="" disabled selected>请选择类型</option>
+                                <option value="学术大师">学术大师</option>
+                                <option value="工程巨匠">工程巨匠</option>
+                                <option value="业界领袖">业界领袖</option>
+                                <option value="治国栋梁">治国栋梁</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="careerGoal" class="block text-sm font-medium mb-1">2. 具体的职业目标 <span class="text-red-500">*</span></label>
+                            <input type="text" id="careerGoal" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="例如：人工智能研发工程师、国企项目经理等（越具体越好）">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вторая часть -->
+                <div>
+                    <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第二部分：行业分析与要求</h4>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="industryStatus" class="block text-sm font-medium mb-1">4. 目标行业的现状、发展趋势和就业需求 <span class="text-red-500">*</span></label>
+                            <textarea id="industryStatus" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label for="jobContent" class="block text-sm font-medium mb-1">5. 目标职业的具体工作内容 <span class="text-red-500">*</span></label>
+                            <textarea id="jobContent" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label for="jobReqs" class="block text-sm font-medium mb-1">6. 职业对个人特质、专业知识及能力的具体要求 <span class="text-red-500">*</span></label>
+                            <textarea id="jobReqs" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Третья часть -->
+                <div>
+                    <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第三部分：差距分析与计划</h4>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="gapAnalysis" class="block text-sm font-medium mb-1">7. 现实情况与目标要求的差距 (科学分析) <span class="text-red-500">*</span></label>
+                            <textarea id="gapAnalysis" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="作为大一学生，目前缺什么？"></textarea>
+                        </div>
+                        <div>
+                            <label for="shortTerm" class="block text-sm font-medium mb-1">8. 短期计划 (专业学习、学生社团等) <span class="text-red-500">*</span></label>
+                            <textarea id="shortTerm" rows="2" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label for="midTerm" class="block text-sm font-medium mb-1">9. 中期计划 (实习实践、科研、竞赛等) <span class="text-red-500">*</span></label>
+                            <textarea id="midTerm" rows="2" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label for="longTerm" class="block text-sm font-medium mb-1">10. 长期计划 (毕业后规划：考研/就业等) <span class="text-red-500">*</span></label>
+                            <textarea id="longTerm" rows="2" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Четвертая часть -->
+                <div>
+                    <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第四部分：实践任务 (文字记录)</h4>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="jobFairTakeaways" class="block text-sm font-medium mb-1">11. 招聘会收获 <span class="text-red-500">*</span></label>
+                            <textarea id="jobFairTakeaways" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="参加了什么招聘会？写一小段话记录你的收获。照片发微信。"></textarea>
+                        </div>
+                        <div>
+                            <label for="interviewTakeaways" class="block text-sm font-medium mb-1">12. 职场访谈收获 <span class="text-red-500">*</span></label>
+                            <textarea id="interviewTakeaways" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="访谈了哪位人士（姓名及职务）？简单介绍并记录收获。合影发微信。"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-500/20 flex items-center justify-between">
+                    <button type="submit" id="submitBtn" class="w-full sm:w-auto flex justify-center py-3 px-8 rounded-md shadow-sm text-base font-medium text-white bg-hit-blue hover:bg-hit-dark transition-colors">
+                        提交我的内容
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Сводка ответов для капитана -->
+        <div class="mb-12">
+            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                <span class="mr-2">📦</span> 已提交内容汇总区 (供队长查看)
+            </h3>
+
+            <div id="loadingIndicator" class="text-center py-8 opacity-70">
+                正在加载数据...
+            </div>
+
+            <div id="submissionsList" class="space-y-6"></div>
+
+            <div id="emptyState" class="hidden text-center py-12 portal-card rounded-xl">
+                <p class="opacity-60">暂无提交记录。快让队员们填写吧！</p>
+            </div>
+        </div>
+
     </main>
 
     <script>
-        async function loadSingleArticle() {
-            // 1. Достаем ID статьи из ссылки (например, ?id=nw_2026_03_11)
-            const urlParams = new URLSearchParams(window.location.search);
-            const articleId = urlParams.get('id');
+        // ============================================================================
+        // ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ SUPABASE (Project Settings -> API)
+        // ============================================================================
+        const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-            const container = document.getElementById('article-content');
-            const loading = document.getElementById('loading');
+        const isSupabaseConfigured = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("YOUR_");
+        const supabaseClient = isSupabaseConfigured 
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) 
+            : null;
 
-            if (!articleId) {
-                container.innerHTML = '<h1>Статья не найдена</h1><a href="index.html" class="back-link">Вернуться</a>';
-                return;
-            }
+        if (isSupabaseConfigured) {
+            const badge = document.getElementById('dbStatusBadge');
+            badge.textContent = "Supabase Cloud подключен";
+            badge.className = "px-2.5 py-1 rounded-full text-xs bg-emerald-500/20 text-emerald-400 font-medium";
+        }
 
-            try {
-                // 2. Идем в папку content и берем нужный файл
-                const response = await fetch(`content/${articleId}.json`);
-                if (!response.ok) throw new Error('Файл не найден');
-                
-                const article = await response.json();
+        // Синхронизация темы с главной страницей
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
 
-                // 3. Меняем заголовок вкладки в браузере для SEO
-                document.title = `${article.title} - Zehinli`;
+            htmlEl.classList.toggle('dark');
+            const isDark = htmlEl.classList.contains('dark');
 
-                // 4. Рисуем саму статью!
-                loading.style.display = 'none';
-                const articleHTML = `
-                    <img src="${article.image}" alt="${article.title}" class="article-image">
-                    <span class="tag">${article.tag}</span>
-                    <h1>${article.title}</h1>
-                    <div style="color: var(--text-dim); margin-bottom: 30px;">
-                        <i class="fa-regular fa-clock"></i> ${article.readTime}
-                    </div>
-                    <div class="article-text">
-                        ${article.text || article.description} 
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', articleHTML);
-
-            } catch (error) {
-                console.error(error);
-                loading.innerHTML = 'Произошла ошибка при загрузке. Возможно, такой статьи нет.';
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                localStorage.setItem('zehinli_theme', 'dark');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                localStorage.setItem('zehinli_theme', 'light');
             }
         }
 
-        loadSingleArticle();
+        (function initTheme() {
+            if (localStorage.getItem('zehinli_theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('sunIcon').classList.add('hidden');
+                document.getElementById('moonIcon').classList.remove('hidden');
+            }
+        })();
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = message;
+            toastMsg.className = isError 
+                ? "bg-red-600 text-white px-6 py-3 rounded-lg shadow-xl font-medium text-sm md:text-base text-center"
+                : "bg-green-600 text-white px-6 py-3 rounded-lg shadow-xl font-medium text-sm md:text-base text-center";
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 3000);
+        }
+
+        window.copyToClipboard = function(textId) {
+            const textToCopy = document.getElementById(textId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('已复制到剪贴板！');
+            }).catch(() => {
+                showToast('复制失败，请手动选择复制', true);
+            });
+        };
+
+        const form = document.getElementById('dataForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const submissionsList = document.getElementById('submissionsList');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const emptyState = document.getElementById('emptyState');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.innerText = '提交中...';
+            submitBtn.disabled = true;
+
+            const record = {
+                name_major: document.getElementById('nameMajor').value.trim(),
+                talent_type: document.getElementById('talentType').value,
+                career_goal: document.getElementById('careerGoal').value.trim(),
+                industry_status: document.getElementById('industryStatus').value.trim(),
+                job_content: document.getElementById('jobContent').value.trim(),
+                job_reqs: document.getElementById('jobReqs').value.trim(),
+                gap_analysis: document.getElementById('gapAnalysis').value.trim(),
+                short_term: document.getElementById('shortTerm').value.trim(),
+                mid_term: document.getElementById('midTerm').value.trim(),
+                long_term: document.getElementById('longTerm').value.trim(),
+                job_fair_takeaways: document.getElementById('jobFairTakeaways').value.trim(),
+                interview_takeaways: document.getElementById('interviewTakeaways').value.trim()
+            };
+
+            try {
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from('team_submissions').insert([record]);
+                    if (error) throw error;
+                } else {
+                    const localData = JSON.parse(localStorage.getItem('hit_career_submissions') || '[]');
+                    localData.unshift({ id: Date.now(), created_at: new Date().toISOString(), ...record });
+                    localStorage.setItem('hit_career_submissions', JSON.stringify(localData));
+                }
+
+                showToast('提交成功！感谢你的配合。');
+                form.reset();
+                await loadSubmissions();
+            } catch (err) {
+                console.error(err);
+                showToast('提交失败: ' + (err.message || '请重试'), true);
+            } finally {
+                submitBtn.innerText = '提交我的内容';
+                submitBtn.disabled = false;
+            }
+        });
+
+        async function loadSubmissions() {
+            loadingIndicator.style.display = 'block';
+            try {
+                let submissions = [];
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient
+                        .from('team_submissions')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    if (error) throw error;
+                    submissions = data || [];
+                } else {
+                    submissions = JSON.parse(localStorage.getItem('hit_career_submissions') || '[]');
+                }
+
+                loadingIndicator.style.display = 'none';
+                if (submissions.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    submissionsList.innerHTML = '';
+                    return;
+                }
+
+                emptyState.classList.add('hidden');
+                submissionsList.innerHTML = submissions.map((sub, index) => {
+                    const contentId = `content-${sub.id || index}`;
+                    const formattedText = `姓名专业：${sub.name_major || ''}
+目标类型：${sub.talent_type || ''}
+职业目标：${sub.career_goal || ''}
+
+【行业现状】
+${sub.industry_status || ''}
+
+【工作内容】
+${sub.job_content || ''}
+
+【职业要求】
+${sub.job_reqs || ''}
+
+【差距分析】
+${sub.gap_analysis || ''}
+
+【短期计划】${sub.short_term || ''}
+【中期计划】${sub.mid_term || ''}
+【长期计划】${sub.long_term || ''}
+
+【招聘会收获】
+${sub.job_fair_takeaways || ''}
+
+【职场访谈收获】
+${sub.interview_takeaways || ''}`;
+
+                    return `
+                        <div class="portal-card rounded-xl shadow-sm overflow-hidden">
+                            <div class="px-6 py-3 border-b border-gray-500/20 flex justify-between items-center bg-black/5 dark:bg-white/5">
+                                <h4 class="font-bold text-lg">
+                                    <span class="text-hit-blue mr-2">#${submissions.length - index}</span>
+                                    ${sub.name_major}
+                                </h4>
+                                <button onclick="copyToClipboard('${contentId}')" class="text-xs portal-card hover:bg-hit-blue hover:text-white py-1.5 px-3 rounded-md flex items-center transition">
+                                    📋 一键复制
+                                </button>
+                            </div>
+                            <div class="p-6">
+                                <pre id="${contentId}" class="whitespace-pre-wrap font-sans text-sm leading-relaxed p-4 rounded-lg bg-black/5 dark:bg-black/30">${formattedText}</pre>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error(err);
+                loadingIndicator.innerHTML = '<span class="text-red-500">无法连接到数据库。</span>';
+            }
+        }
+
+        loadSubmissions();
     </script>
 </body>
 </html>
