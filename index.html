@@ -114,4 +114,809 @@
 
         .portal-card {
             background-color: var(--bg-card);
-            border: 1
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+        }
+
+        .portal-hero {
+            background: linear-gradient(135deg, var(--bg-hero-grad-start) 0%, var(--bg-hero-grad-end) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .portal-badge {
+            background-color: var(--badge-bg);
+            border: 1px solid var(--badge-border);
+            color: var(--text-primary);
+        }
+
+        .skeleton-bar-1 {
+            background-color: var(--skeleton-1);
+        }
+        .skeleton-bar-2 {
+            background-color: var(--skeleton-2);
+        }
+
+        /* Sun / Moon Icon Animation */
+        .theme-toggle-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-icon-sun, .theme-icon-moon {
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+        }
+        :root[data-theme="dark"] .theme-icon-sun {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+            color: #fbbf24;
+        }
+        :root[data-theme="dark"] .theme-icon-moon {
+            transform: translateY(28px) rotate(90deg);
+            opacity: 0;
+            position: absolute;
+        }
+        :root[data-theme="light"] .theme-icon-sun {
+            transform: translateY(-28px) rotate(-90deg);
+            opacity: 0;
+            position: absolute;
+        }
+        :root[data-theme="light"] .theme-icon-moon {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+            color: #2563eb;
+        }
+
+        /* Tab Folder Shape (matches screenshot "常用系统" tab) */
+        .folder-tab-active {
+            background-color: var(--bg-card);
+            border-top: 2px solid var(--accent-primary);
+            border-right: 1px solid var(--border-color);
+            color: var(--accent-primary);
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        .animate-pulse-slow {
+            animation: pulseSlow 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+    <!-- ==========================================
+         1. TOP NAVIGATION HEADER (HIT Portal Style)
+         ========================================== -->
+    <header class="portal-header h-16 w-full sticky top-0 z-50 px-4 lg:px-8 flex items-center justify-between">
+        
+        <!-- Left Brand Emblem & Portal Title -->
+        <div class="flex items-center gap-4">
+            <a href="#top" class="flex items-center gap-3 group focus:outline-none">
+                <!-- Architectural & Robotics Emblem SVG -->
+                <div class="w-10 h-10 rounded-lg flex items-center justify-center border border-[var(--border-color)] bg-[var(--bg-elevated)] group-hover:border-blue-500 transition">
+                    <svg class="w-6 h-6 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3L3 8l9 5 9-5-9-5z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16l9 5 9-5"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9 5 9-5"/>
+                        <circle cx="12" cy="8" r="1.5" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base sm:text-lg font-bold tracking-wider leading-none">ZEHINLI.ORG</span>
+                    <span class="text-[10px] font-mono-code tracking-widest uppercase text-[var(--text-secondary)] mt-1">Engineering & Knowledge</span>
+                </div>
+            </a>
+
+            <!-- Vertical Divider -->
+            <div class="h-7 w-[1px] bg-[var(--border-color)] hidden sm:block mx-1"></div>
+
+            <!-- Portal Subtitle -->
+            <div class="hidden sm:flex flex-col justify-center">
+                <span class="text-sm font-semibold tracking-wide leading-tight" data-i18n="portalTitle">Личный портал</span>
+                <span class="text-[11px] text-[var(--text-secondary)] tracking-wider">Campus & Lab Portal</span>
+            </div>
+        </div>
+
+        <!-- Right Utility Bar -->
+        <div class="flex items-center gap-1 sm:gap-2">
+
+            <!-- ДОБАВЛЕННАЯ ОТДЕЛЬНАЯ КНОПКА ПЕРЕХОДА НА АНКЕТУ -->
+            <a href="./survey.html" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-2 shadow-sm transition mr-1">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span class="hidden md:inline">Командная анкета</span>
+            </a>
+            
+            <!-- 1. Search Icon -->
+            <button id="openSearchBtn" title="Поиск (Ctrl+K)" class="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]">
+                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </button>
+
+            <!-- 2. THEME SWITCHER: Sun & Moon -->
+            <button id="themeToggleBtn" aria-label="Переключить тему" class="theme-toggle-btn w-9 h-9 rounded-lg flex items-center justify-center border border-transparent hover:border-[var(--border-color)] hover:bg-[var(--bg-elevated)] group relative">
+                <i class="fa-solid fa-sun text-base theme-icon-sun"></i>
+                <i class="fa-solid fa-moon text-base theme-icon-moon"></i>
+                <!-- Tooltip -->
+                <span id="themeTooltip" class="pointer-events-none absolute top-full mt-2 right-0 sm:left-1/2 sm:-translate-x-1/2 px-2.5 py-1 rounded text-[11px] font-medium whitespace-nowrap bg-[var(--bg-elevated)] text-[var(--text-primary)] border border-[var(--border-color)] opacity-0 group-hover:opacity-100 shadow-lg transition-opacity z-50">
+                    Белый / Темный
+                </span>
+            </button>
+
+            <!-- 3. Notifications Bell -->
+            <button id="notifBtn" title="Уведомления" class="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] relative">
+                <i class="fa-regular fa-bell text-sm"></i>
+                <span class="w-2 h-2 rounded-full bg-blue-500 absolute top-2 right-2"></span>
+            </button>
+
+            <!-- 4. Monitor / Workspace Systems -->
+            <button id="workspaceModeBtn" title="Режим отображения карточек" class="w-9 h-9 rounded-lg hidden md:flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)]">
+                <i class="fa-solid fa-tv text-sm"></i>
+            </button>
+
+            <!-- 5. Favorites Star -->
+            <button id="favBtn" title="Избранные ресурсы" class="w-9 h-9 rounded-lg hidden sm:flex items-center justify-center text-[var(--text-secondary)] hover:text-amber-400 hover:bg-[var(--bg-elevated)]">
+                <i class="fa-regular fa-star text-sm"></i>
+            </button>
+
+            <!-- 6. User Profile Dropdown (REYIMOV DIDAR) -->
+            <div class="relative ml-1 pl-2 sm:pl-3 border-l border-[var(--border-color)]">
+                <button id="userMenuBtn" class="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[var(--bg-elevated)] text-xs sm:text-sm font-medium tracking-wide">
+                    <span>REYIMOV DIDAR</span>
+                    <i class="fa-solid fa-caret-down text-xs text-[var(--text-secondary)]"></i>
+                </button>
+                <!-- Profile Dropdown Menu -->
+                <div id="userDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl portal-card p-2 z-50">
+                    <div class="px-3 py-2 border-b border-[var(--border-color)] mb-1">
+                        <p class="text-xs font-semibold">Didar Reyimov</p>
+                        <p class="text-[11px] text-[var(--text-secondary)] font-mono-code">ID: 2026131414 • HIT</p>
+                    </div>
+                    <a href="./survey.html" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-[var(--bg-elevated)] flex items-center gap-2.5">
+                        <i class="fa-solid fa-clipboard-list text-blue-500"></i> Командная анкета (HIT)
+                    </a>
+                    <button onclick="toggleTheme()" class="w-full text-left px-3 py-2 rounded-lg text-xs hover:bg-[var(--bg-elevated)] flex items-center justify-between">
+                        <span class="flex items-center gap-2.5"><i class="fa-solid fa-circle-half-stroke text-amber-500"></i> Тема оформления</span>
+                        <span id="dropdownThemeLabel" class="text-[10px] font-mono-code px-1.5 py-0.5 rounded bg-[var(--bg-primary)]">DARK</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 7. Language Switcher (RU / EN / ZH) -->
+            <button id="langSwitchBtn" title="Сменить язык интерфейса (RU / EN / 中文)" class="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] font-mono-code text-xs font-semibold">
+                <span id="currentLangBadge">RU</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Subtle Secondary Bar -->
+    <div class="portal-subbar h-9 w-full px-4 lg:px-8 flex items-center justify-between text-xs text-[var(--text-secondary)]">
+        <div class="flex items-center gap-4 overflow-x-auto no-scrollbar">
+            <span class="flex items-center gap-1.5 whitespace-nowrap">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span data-i18n="statusOnline">Zehinli Core: Активен</span>
+            </span>
+            <span class="hidden sm:inline text-[var(--text-muted)]">|</span>
+            <span class="hidden sm:inline whitespace-nowrap" data-i18n="subbarDept">Факультет робототехники и мехатроники (Robot Engineering)</span>
+        </div>
+        <div class="flex items-center gap-3 font-mono-code text-[11px]">
+            <span id="themeStatusPill" class="px-2 py-0.5 rounded bg-[var(--bg-elevated)] text-[var(--text-primary)] border border-[var(--border-color)]">
+                🌙 Темный режим
+            </span>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         2. MAIN 2-COLUMN PORTAL LAYOUT
+         ========================================== -->
+    <main id="top" class="flex-1 w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- ==========================================
+             LEFT COLUMN (7 cols): Profile Banner & Modules
+             ========================================== -->
+        <section class="lg:col-span-7 portal-card rounded-xl overflow-hidden flex flex-col">
+            
+            <!-- Top Hero Card -->
+            <div class="portal-hero relative min-h-[240px] sm:min-h-[260px] p-6 sm:p-8 flex flex-col justify-between overflow-hidden">
+                
+                <!-- Architectural / Engineering Silhouette SVG on the Right -->
+                <div class="absolute right-0 bottom-0 top-0 w-3/5 pointer-events-none flex items-end justify-end overflow-hidden" style="opacity: var(--hero-art-opacity);">
+                    <svg viewBox="0 0 420 260" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-full w-auto object-cover">
+                        <g stroke="currentColor" stroke-width="1.2">
+                            <line x1="120" y1="0" x2="120" y2="260" stroke-dasharray="4 4" opacity="0.4"/>
+                            <line x1="260" y1="0" x2="260" y2="260" stroke-dasharray="4 4" opacity="0.4"/>
+                            <line x1="0" y1="80" x2="420" y2="80" stroke-dasharray="4 4" opacity="0.4"/>
+                            <path d="M260 18 L260 45 M252 45 L268 45 L270 72 L250 72 Z"/>
+                            <rect x="242" y="72" width="36" height="35"/>
+                            <rect x="230" y="107" width="60" height="45"/>
+                            <rect x="215" y="152" width="90" height="108"/>
+                            <line x1="230" y1="152" x2="230" y2="260" stroke-width="2"/>
+                            <line x1="245" y1="152" x2="245" y2="260" stroke-width="2"/>
+                            <line x1="260" y1="152" x2="260" y2="260" stroke-width="2"/>
+                            <line x1="275" y1="152" x2="275" y2="260" stroke-width="2"/>
+                            <line x1="290" y1="152" x2="290" y2="260" stroke-width="2"/>
+                            <path d="M305 170 L415 130 L415 260 L305 260 Z" fill="currentColor" fill-opacity="0.08"/>
+                            <line x1="305" y1="170" x2="415" y2="130" stroke-width="1.8"/>
+                            <line x1="305" y1="195" x2="415" y2="160"/>
+                            <line x1="305" y1="220" x2="415" y2="190"/>
+                            <path d="M140 190 L215 190 L215 260 L140 260 Z"/>
+                            <circle cx="260" cy="15" r="3" fill="currentColor"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Top Row inside Hero -->
+                <div class="relative z-10 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-md bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-500">
+                            <i class="fa-solid fa-compass-drafting text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold tracking-wider uppercase">ZEHINLI.ORG</div>
+                            <div class="text-[10px] text-[var(--text-secondary)] tracking-widest uppercase">Harbin • Personal Lab</div>
+                        </div>
+                    </div>
+
+                    <button onclick="toggleSkeletonView()" title="Переключить вид: Модули / Скелетон" class="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)]/60 border border-transparent hover:border-[var(--border-color)]">
+                        <i class="fa-solid fa-gear text-sm"></i>
+                    </button>
+                </div>
+
+                <!-- Middle Row: Vertical Accent Bar + Name -->
+                <div class="relative z-10 my-6">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-1 h-8 bg-[var(--text-primary)] rounded-full"></div>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-semibold tracking-wide">REYIMOV DIDAR</h1>
+                            <p class="text-xs sm:text-sm text-[var(--text-secondary)] mt-0.5" data-i18n="heroRole">
+                                Инженер-робототехник • Разработчик личной базы знаний Zehinli
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: ID Pill Badges -->
+                <div class="relative z-10 flex flex-wrap items-center gap-2.5">
+                    <span class="portal-badge px-4 py-1 rounded-full text-xs font-mono-code tracking-wider shadow-sm">
+                        2026131414
+                    </span>
+                    <span class="portal-badge px-3.5 py-1 rounded-full text-xs text-[var(--text-secondary)] flex items-center gap-1.5">
+                        <i class="fa-solid fa-microchip text-blue-500 text-[11px]"></i>
+                        <span data-i18n="badgeMajor">Robot Engineering (B.Eng)</span>
+                    </span>
+                    <button onclick="toggleSkeletonView()" class="ml-auto text-[11px] text-[var(--text-secondary)] hover:text-blue-500 underline underline-offset-4">
+                        <span id="viewModeToggleText" data-i18n="toggleSkeleton">Вид: Активные разделы</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feed / Modules List Below Hero -->
+            <div class="p-5 sm:p-6 divide-y divide-[var(--border-subtle)]" id="leftCardBody">
+                
+                <!-- VIEW A: Populated Interactive Zehinli.org Modules -->
+                <div id="populatedModulesList" class="divide-y divide-[var(--border-subtle)]">
+                    
+                    <!-- Item 1 -->
+                    <div class="py-4 first:pt-1 last:pb-1 flex items-start gap-4 group cursor-pointer rounded-lg px-2 -mx-2 hover:bg-[var(--bg-card-hover)]" onclick="showToast('Открыт раздел: Высшая математика и конспекты')">
+                        <div class="w-11 h-11 rounded-full bg-blue-500/10 border border-blue-500/25 text-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-square-root-variable text-base"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <h3 class="text-sm font-semibold group-hover:text-blue-500 truncate" data-i18n="mod1Title">Высшая математика и Инженерный анализ</h3>
+                                <span class="text-[11px] font-mono-code text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded">LaTeX / Конспекты</span>
+                            </div>
+                            <p class="text-xs text-[var(--text-secondary)] mt-1 line-clamp-1" data-i18n="mod1Desc">
+                                Интерактивные шпаргалки, ряды, интегралы и дифференциальные уравнения для экзаменов.
+                            </p>
+                            <div class="w-full bg-[var(--skeleton-2)] h-1.5 rounded-full mt-2.5 overflow-hidden">
+                                <div class="bg-blue-500 h-full rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="py-4 flex items-start gap-4 group cursor-pointer rounded-lg px-2 -mx-2 hover:bg-[var(--bg-card-hover)]" onclick="showToast('Открыт проект: 3D CAD & Микро-ТРД KJ-66')">
+                        <div class="w-11 h-11 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-500 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-fan text-base"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <h3 class="text-sm font-semibold group-hover:text-amber-500 truncate" data-i18n="mod2Title">Лаборатория 3D-моделирования и CAD</h3>
+                                <span class="text-[11px] font-mono-code text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">SolidWorks / STEP</span>
+                            </div>
+                            <p class="text-xs text-[var(--text-secondary)] mt-1 line-clamp-1" data-i18n="mod2Desc">
+                                Чертежи микро-турбореактивного двигателя KJ-66, допуски, 3D-сборки и узлы роботов.
+                            </p>
+                            <div class="w-full bg-[var(--skeleton-2)] h-1.5 rounded-full mt-2.5 overflow-hidden">
+                                <div class="bg-amber-500 h-full rounded-full" style="width: 64%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="py-4 flex items-start gap-4 group cursor-pointer rounded-lg px-2 -mx-2 hover:bg-[var(--bg-card-hover)]" onclick="showToast('Открыт тренажер карточек HSK & Технический китайский')">
+                        <div class="w-11 h-11 rounded-full bg-purple-500/10 border border-purple-500/25 text-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:scale-105 transition">
+                            <i class="fa-solid fa-language text-base"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <h3 class="text-sm font-semibold group-hover:text-purple-500 truncate" data-i18n="mod3Title">Интерактивные карточки HSK и Терминология</h3>
+                                <span class="text-[11px] font-mono-code text-purple-500 bg-purple-500/10 px-2 py-0.5 rounded">SRS Audio</span>
+                            </div>
+                            <p class="text-xs text-[var(--text-secondary)] mt-1 line-clamp-1" data-i18n="mod3Desc">
+                                Интервальное повторение лексики, технический китайский язык для лекций в Харбине.
+                            </p>
+                            <div class="w-full bg-[var(--skeleton-2)] h-1.5 rounded-full mt-2.5 overflow-hidden">
+                                <div class="bg-purple-500 h-full rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- VIEW B: Original Screenshot Skeleton Mode -->
+                <div id="skeletonModulesList" class="hidden divide-y divide-[var(--border-subtle)]">
+                    <div class="py-5 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-full skeleton-bar-1 animate-pulse-slow flex-shrink-0"></div>
+                        <div class="flex-1 space-y-3">
+                            <div class="h-4 w-5/12 rounded skeleton-bar-1 animate-pulse-slow"></div>
+                            <div class="h-3.5 w-full rounded skeleton-bar-2 animate-pulse-slow"></div>
+                        </div>
+                    </div>
+                    <div class="py-5 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-full skeleton-bar-1 animate-pulse-slow flex-shrink-0"></div>
+                        <div class="flex-1 space-y-3">
+                            <div class="h-4 w-5/12 rounded skeleton-bar-1 animate-pulse-slow"></div>
+                            <div class="h-3.5 w-full rounded skeleton-bar-2 animate-pulse-slow"></div>
+                        </div>
+                    </div>
+                    <div class="py-5 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-full skeleton-bar-1 animate-pulse-slow flex-shrink-0"></div>
+                        <div class="flex-1 space-y-3">
+                            <div class="h-4 w-5/12 rounded skeleton-bar-1 animate-pulse-slow"></div>
+                            <div class="h-3.5 w-full rounded skeleton-bar-2 animate-pulse-slow"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             RIGHT COLUMN (5 cols): Status Bar, Blue Banner, Systems Card
+             ========================================== -->
+        <aside class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- 1. Top Rounded Status / Quick Search Bar -->
+            <div class="portal-card rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 text-xs text-[var(--text-secondary)]">
+                    <i class="fa-regular fa-clock text-blue-500"></i>
+                    <span id="liveClock" class="font-mono-code font-medium text-[var(--text-primary)]">--:--:--</span>
+                    <span class="text-[var(--text-muted)]">•</span>
+                    <span data-i18n="locationTag">Harbin / UTC+8</span>
+                </div>
+                <button onclick="toggleTheme()" class="text-xs px-2.5 py-1 rounded-md bg-[var(--bg-elevated)] hover:bg-blue-500 hover:text-white text-[var(--text-secondary)] flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+                    <span data-i18n="switchThemeBtn">Сменить тему</span>
+                </button>
+            </div>
+
+            <!-- 2. Featured Blue Illustrated Banner Carousel -->
+            <div class="relative rounded-xl overflow-hidden shadow-lg select-none" style="background: linear-gradient(125deg, #0b5394 0%, #1665c1 55%, #1e88e5 100%); min-height: 215px;">
+                
+                <!-- Slide Content Container -->
+                <div class="relative z-10 p-6 sm:p-7 flex flex-col justify-between h-full min-h-[215px] text-white">
+                    <div class="max-w-[65%]">
+                        <span id="bannerTag" class="inline-block text-[10px] font-mono-code uppercase tracking-widest px-2 py-0.5 rounded bg-white/15 text-blue-100 mb-2">
+                            ZEHINLI HUB • 01
+                        </span>
+                        <h2 id="bannerTitle" class="text-lg sm:text-xl font-bold leading-snug tracking-wide drop-shadow-sm">
+                            Инженерные проекты и База знаний
+                        </h2>
+                        <p id="bannerSubtitle" class="text-xs text-blue-100/90 mt-1.5 leading-relaxed">
+                            Быстрый доступ к конспектам, алгоритмам и справочникам подразделений
+                        </p>
+                    </div>
+
+                    <div class="mt-5 flex items-center justify-between">
+                        <button id="bannerActionBtn" onclick="handleBannerClick()" class="px-5 py-1.5 rounded-md border border-white/80 bg-white/10 hover:bg-white hover:text-blue-700 text-xs font-medium tracking-wider backdrop-blur-sm transition">
+                            Открыть раздел
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Vector Illustration -->
+                <div class="absolute right-2 bottom-0 top-0 w-44 sm:w-52 pointer-events-none flex items-end justify-end">
+                    <svg viewBox="0 0 220 190" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+                        <ellipse cx="115" cy="48" rx="28" ry="20" fill="#6b7280" fill-opacity="0.45"/>
+                        <ellipse cx="82" cy="70" rx="25" ry="18" fill="#f59e0b"/>
+                        <path d="M72 84 L65 95 L82 87 Z" fill="#f59e0b"/>
+                        <line x1="70" y1="66" x2="94" y2="66" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="70" y1="74" x2="88" y2="74" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <rect x="40" y="112" width="110" height="52" rx="6" fill="#f8fafc"/>
+                        <rect x="48" y="122" width="75" height="6" rx="3" fill="#cbd5e1"/>
+                        <rect x="48" y="135" width="55" height="6" rx="3" fill="#e2e8f0"/>
+                        <path d="M115 125 L168 125 L182 175 L102 175 Z" fill="#f59e0b"/>
+                        <circle cx="142" cy="152" r="19" fill="white"/>
+                        <circle cx="142" cy="152" r="12" stroke="#f59e0b" stroke-width="3" stroke-dasharray="4 3"/>
+                        <circle cx="142" cy="152" r="5" fill="#f59e0b"/>
+                        <rect x="182" y="42" width="18" height="82" rx="9" fill="#ea580c"/>
+                        <rect x="172" y="42" width="16" height="24" rx="5" fill="#f97316"/>
+                        <rect x="172" y="100" width="16" height="24" rx="5" fill="#f97316"/>
+                        <path d="M192 124 C192 155, 205 168, 175 168" stroke="#f59e0b" stroke-width="4" fill="none"/>
+                    </svg>
+                </div>
+
+                <!-- Bottom Carousel Pagination Pills -->
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+                    <button onclick="setSlide(0)" class="slide-dot w-5 h-1.5 rounded-full bg-white transition-all"></button>
+                    <button onclick="setSlide(1)" class="slide-dot w-4 h-1.5 rounded-full bg-white/40 hover:bg-white/70 transition-all"></button>
+                    <button onclick="setSlide(2)" class="slide-dot w-4 h-1.5 rounded-full bg-white/40 hover:bg-white/70 transition-all"></button>
+                </div>
+            </div>
+
+            <!-- 3. Bottom-Right "Common Systems / Часто используемые системы" Card -->
+            <div class="portal-card rounded-xl overflow-hidden flex flex-col min-h-[270px]">
+                
+                <!-- Card Folder Header -->
+                <div class="flex items-center justify-between bg-[var(--bg-secondary)] border-b border-[var(--border-color)] pr-4">
+                    <div class="flex items-center">
+                        <button id="tabSystems" onclick="switchSystemTab('apps')" class="folder-tab-active px-5 py-3 text-xs font-semibold tracking-wide rounded-tl-xl">
+                            <span data-i18n="commonSystems">Часто используемые</span>
+                        </button>
+                        <button id="tabEmpty" onclick="switchSystemTab('empty')" class="px-4 py-3 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+                            <span data-i18n="emptyStateTab">Вид «No data»</span>
+                        </button>
+                    </div>
+
+                    <button onclick="switchSystemTab(currentSysTab === 'apps' ? 'empty' : 'apps')" class="text-xs text-[var(--text-secondary)] hover:text-blue-500 flex items-center gap-1.5 py-1 px-2 rounded hover:bg-[var(--bg-elevated)]">
+                        <i class="fa-solid fa-gear text-xs"></i>
+                        <span data-i18n="settingsLabel">Настройки</span>
+                    </button>
+                </div>
+
+                <!-- Tab 1: Quick Launch Systems Grid -->
+                <div id="systemsPopulatedView" class="p-5 flex-1 grid grid-cols-3 gap-3 items-center">
+                    
+                    <!-- КНОПКА ПЕРЕХОДА НА СТРАНИЦУ АНКЕТЫ В СЕТКЕ СИСТЕМ -->
+                    <a href="./survey.html" class="p-3 rounded-xl border border-blue-500/40 bg-blue-500/10 hover:border-blue-500 hover:bg-blue-500/20 flex flex-col items-center justify-center gap-2 group">
+                        <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center group-hover:scale-110 transition shadow-sm">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </div>
+                        <span class="text-[11px] font-semibold text-center">Анкета HIT</span>
+                    </a>
+
+                    <button onclick="showToast('Запуск: База флеш-карточек Anki / HSK')" class="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]/50 hover:border-purple-500/50 hover:bg-[var(--bg-card-hover)] flex flex-col items-center justify-center gap-2 group">
+                        <div class="w-9 h-9 rounded-lg bg-purple-500/15 text-purple-500 flex items-center justify-center group-hover:scale-110 transition">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-center">Карточки HSK</span>
+                    </button>
+
+                    <button onclick="showToast('Запуск: 3D CAD Архив моделей')" class="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]/50 hover:border-amber-500/50 hover:bg-[var(--bg-card-hover)] flex flex-col items-center justify-center gap-2 group">
+                        <div class="w-9 h-9 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center group-hover:scale-110 transition">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-center">CAD Модели</span>
+                    </button>
+
+                    <button onclick="showToast('Запуск: Высшая математика и LaTeX')" class="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]/50 hover:border-emerald-500/50 hover:bg-[var(--bg-card-hover)] flex flex-col items-center justify-center gap-2 group">
+                        <div class="w-9 h-9 rounded-lg bg-emerald-500/15 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition">
+                            <i class="fa-solid fa-infinity"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-center">Мат. Анализ</span>
+                    </button>
+
+                    <button onclick="showToast('Запуск: GitHub репозитории Zehinli')" class="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]/50 hover:border-sky-500/50 hover:bg-[var(--bg-card-hover)] flex flex-col items-center justify-center gap-2 group">
+                        <div class="w-9 h-9 rounded-lg bg-sky-500/15 text-sky-500 flex items-center justify-center group-hover:scale-110 transition">
+                            <i class="fa-brands fa-github"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-center">GitHub Код</span>
+                    </button>
+
+                    <button onclick="toggleTheme()" class="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-secondary)]/50 hover:border-rose-500/50 hover:bg-[var(--bg-card-hover)] flex flex-col items-center justify-center gap-2 group">
+                        <div class="w-9 h-9 rounded-lg bg-rose-500/15 text-rose-500 flex items-center justify-center group-hover:scale-110 transition">
+                            <i class="fa-solid fa-sliders"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-center">Тема сайта</span>
+                    </button>
+                </div>
+
+                <!-- Tab 2: Exact "No data" Empty State -->
+                <div id="systemsEmptyView" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-[var(--text-muted)]">
+                    <svg class="w-14 h-14 mb-2 opacity-40" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 8h40l8 16v16a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V24l8-16z"/>
+                        <path d="M4 24h18a4 4 0 0 0 4 4h12a4 4 0 0 0 4-4h18"/>
+                    </svg>
+                    <span class="text-xs tracking-wide">No data</span>
+                </div>
+
+            </div>
+
+        </aside>
+    </main>
+
+    <!-- ==========================================
+         3. FLOATING RIGHT ACTION DOCK
+         ========================================== -->
+    <div class="fixed right-3 sm:right-5 bottom-6 z-40 flex flex-col gap-2.5">
+        <button onclick="openAiDrawer()" title="Zehinli AI Ассистент" class="w-10 h-10 rounded-full bg-[var(--dock-bg)] border border-[var(--border-color)] shadow-lg flex items-center justify-center text-xs font-bold text-[var(--text-secondary)] hover:text-blue-500 hover:border-blue-500">
+            AI
+        </button>
+        <button onclick="showToast('Линия консультаций и контакты лаборатории')" title="Поддержка и контакты" class="w-10 h-10 rounded-full bg-[var(--dock-bg)] border border-[var(--border-color)] shadow-lg flex items-center justify-center text-sm text-[var(--text-secondary)] hover:text-blue-500 hover:border-blue-500">
+            <i class="fa-solid fa-headset"></i>
+        </button>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Наверх / Возврат" class="w-10 h-10 rounded-full bg-[var(--dock-bg)] border border-[var(--border-color)] shadow-lg flex items-center justify-center text-sm text-[var(--text-secondary)] hover:text-blue-500 hover:border-blue-500">
+            <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button onclick="toggleSkeletonView()" title="Переключить макет (Скелетон / Полный)" class="w-10 h-10 rounded-full bg-[var(--dock-bg)] border border-[var(--border-color)] shadow-lg flex items-center justify-center text-sm text-[var(--text-secondary)] hover:text-blue-500 hover:border-blue-500">
+            <i class="fa-solid fa-table-columns"></i>
+        </button>
+        <button onclick="openSearchModal()" title="Быстрая заметка / Команда" class="w-10 h-10 rounded-full bg-[var(--dock-bg)] border border-[var(--border-color)] shadow-lg flex items-center justify-center text-sm text-[var(--text-secondary)] hover:text-blue-500 hover:border-blue-500">
+            <i class="fa-regular fa-pen-to-square"></i>
+        </button>
+    </div>
+
+    <!-- ==========================================
+         4. SEARCH / QUICK COMMAND MODAL
+         ========================================== -->
+    <div id="searchModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-start justify-center pt-24 px-4">
+        <div class="portal-card w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl">
+            <div class="p-4 border-b border-[var(--border-color)] flex items-center gap-3">
+                <i class="fa-solid fa-magnifying-glass text-blue-500"></i>
+                <input id="searchInput" type="text" placeholder="Поиск по Zehinli.org (конспекты, чертежи, карточки)..." class="w-full bg-transparent text-sm focus:outline-none text-[var(--text-primary)]">
+                <button onclick="closeSearchModal()" class="text-xs px-2 py-1 rounded bg-[var(--bg-elevated)] text-[var(--text-secondary)]">ESC</button>
+            </div>
+            <div class="p-3 text-xs space-y-1">
+                <div class="px-2 py-1 text-[10px] font-mono-code uppercase text-[var(--text-muted)]">Быстрые действия</div>
+                <a href="./survey.html" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[var(--bg-elevated)] flex items-center justify-between">
+                    <span class="flex items-center gap-2.5"><i class="fa-solid fa-clipboard-list text-blue-500"></i> Открыть командную анкету (survey.html)</span>
+                    <span class="text-[10px] font-mono-code text-[var(--text-secondary)]">Page</span>
+                </a>
+                <button onclick="toggleTheme(); closeSearchModal();" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[var(--bg-elevated)] flex items-center justify-between">
+                    <span class="flex items-center gap-2.5"><i class="fa-solid fa-sun text-amber-400"></i> Переключить тему (Темная / Белая)</span>
+                    <span class="text-[10px] font-mono-code text-[var(--text-secondary)]">Theme</span>
+                </button>
+                <button onclick="toggleSkeletonView(); closeSearchModal();" class="w-full text-left px-3 py-2.5 rounded-lg hover:bg-[var(--bg-elevated)] flex items-center justify-between">
+                    <span class="flex items-center gap-2.5"><i class="fa-solid fa-bars-staggered text-blue-500"></i> Переключить режим карточек (Контент / Скелетон)</span>
+                    <span class="text-[10px] font-mono-code text-[var(--text-secondary)]">Layout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastBox" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform translate-y-2">
+        <div class="portal-card px-4 py-2.5 rounded-full shadow-xl flex items-center gap-2.5 text-xs font-medium border border-blue-500/40">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span id="toastText">Готово</span>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT LOGIC (Theme, Carousel, i18n)
+         ========================================== -->
+    <script>
+        // 1. Theme Management (Dark vs Pure Clean White)
+        const htmlEl = document.documentElement;
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeStatusPill = document.getElementById('themeStatusPill');
+        const dropdownThemeLabel = document.getElementById('dropdownThemeLabel');
+
+        function applyTheme(theme) {
+            htmlEl.setAttribute('data-theme', theme);
+            localStorage.setItem('zehinli_theme', theme);
+            if (theme === 'light') {
+                themeStatusPill.innerHTML = '☀️ Белый режим';
+                if (dropdownThemeLabel) dropdownThemeLabel.textContent = 'WHITE';
+            } else {
+                themeStatusPill.innerHTML = '🌙 Темный режим';
+                if (dropdownThemeLabel) dropdownThemeLabel.textContent = 'DARK';
+            }
+        }
+
+        function toggleTheme() {
+            const current = htmlEl.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            showToast(next === 'light' ? 'Включен дневной белый режим' : 'Включен темный режим портала');
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+
+        // Load saved theme or default to dark
+        const savedTheme = localStorage.getItem('zehinli_theme') || 'dark';
+        applyTheme(savedTheme);
+
+        // 2. Live Clock
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ru-RU', { hour12: false });
+            document.getElementById('liveClock').textContent = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 3. Banner Carousel Data & Controls
+        const slides = [
+            {
+                tag: 'ZEHINLI HUB • 01',
+                title: 'Инженерные проекты и База знаний',
+                subtitle: 'Быстрый доступ к конспектам, алгоритмам и справочникам подразделений',
+                btn: 'Открыть раздел'
+            },
+            {
+                tag: 'ROBOTICS LAB • 02',
+                title: '3D CAD & Прототипирование',
+                subtitle: 'Чертежи микро-турбореактивного двигателя KJ-66 и механических узлов',
+                btn: 'Смотреть чертежи'
+            },
+            {
+                tag: 'LANGUAGE DECK • 03',
+                title: 'Тренажер HSK и Технический китайский',
+                subtitle: 'Интерактивные карточки с озвучкой для подготовки к лекциям в HIT',
+                btn: 'Запустить карточки'
+            }
+        ];
+        let currentSlide = 0;
+
+        function setSlide(index) {
+            currentSlide = index;
+            const s = slides[index];
+            document.getElementById('bannerTag').textContent = s.tag;
+            document.getElementById('bannerTitle').textContent = s.title;
+            document.getElementById('bannerSubtitle').textContent = s.subtitle;
+            document.getElementById('bannerActionBtn').textContent = s.btn;
+
+            const dots = document.querySelectorAll('.slide-dot');
+            dots.forEach((d, idx) => {
+                if (idx === index) {
+                    d.className = 'slide-dot w-6 h-1.5 rounded-full bg-white transition-all';
+                } else {
+                    d.className = 'slide-dot w-4 h-1.5 rounded-full bg-white/40 hover:bg-white/70 transition-all';
+                }
+            });
+        }
+
+        function handleBannerClick() {
+            showToast('Переход в раздел: ' + slides[currentSlide].title);
+        }
+
+        setInterval(() => {
+            setSlide((currentSlide + 1) % slides.length);
+        }, 6000);
+
+        // 4. Toggle Left Card between Active Modules and Screenshot Skeleton View
+        let isSkeletonMode = false;
+        function toggleSkeletonView() {
+            isSkeletonMode = !isSkeletonMode;
+            const pop = document.getElementById('populatedModulesList');
+            const skel = document.getElementById('skeletonModulesList');
+            const label = document.getElementById('viewModeToggleText');
+
+            if (isSkeletonMode) {
+                pop.classList.add('hidden');
+                skel.classList.remove('hidden');
+                label.textContent = 'Вид: Скелетон (как на скриншоте)';
+                showToast('Включен режим скелетона из референса');
+            } else {
+                pop.classList.remove('hidden');
+                skel.classList.add('hidden');
+                label.textContent = 'Вид: Активные разделы';
+                showToast('Включен режим активных модулей Zehinli.org');
+            }
+        }
+        document.getElementById('workspaceModeBtn').addEventListener('click', toggleSkeletonView);
+
+        // 5. Switch Right-Bottom Card Tabs
+        let currentSysTab = 'apps';
+        function switchSystemTab(tab) {
+            currentSysTab = tab;
+            const popView = document.getElementById('systemsPopulatedView');
+            const empView = document.getElementById('systemsEmptyView');
+            const tabSys = document.getElementById('tabSystems');
+            const tabEmp = document.getElementById('tabEmpty');
+
+            if (tab === 'apps') {
+                popView.classList.remove('hidden');
+                empView.classList.add('hidden');
+                tabSys.className = 'folder-tab-active px-5 py-3 text-xs font-semibold tracking-wide rounded-tl-xl';
+                tabEmp.className = 'px-4 py-3 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]';
+            } else {
+                popView.classList.add('hidden');
+                empView.classList.remove('hidden');
+                tabEmp.className = 'folder-tab-active px-5 py-3 text-xs font-semibold tracking-wide';
+                tabSys.className = 'px-4 py-3 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)]';
+            }
+        }
+
+        // 6. User Dropdown & Search Modal
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('hidden');
+        });
+        document.addEventListener('click', () => userDropdown.classList.add('hidden'));
+
+        function openSearchModal() {
+            document.getElementById('searchModal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('searchInput').focus(), 50);
+        }
+        function closeSearchModal() {
+            document.getElementById('searchModal').classList.add('hidden');
+        }
+        document.getElementById('openSearchBtn').addEventListener('click', openSearchModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSearchModal();
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                openSearchModal();
+            }
+        });
+
+        // 7. Language Switcher (RU / EN / ZH)
+        const langs = ['RU', 'EN', 'ZH'];
+        let langIdx = 0;
+        const dict = {
+            RU: {
+                portalTitle: 'Личный портал',
+                statusOnline: 'Zehinli Core: Активен',
+                subbarDept: 'Факультет робототехники и мехатроники (Robot Engineering)',
+                heroRole: 'Инженер-робототехник • Разработчик личной базы знаний Zehinli',
+                commonSystems: 'Часто используемые',
+                settingsLabel: 'Настройки',
+                switchThemeBtn: 'Сменить тему'
+            },
+            EN: {
+                portalTitle: 'Campus Portal',
+                statusOnline: 'Zehinli Core: Online',
+                subbarDept: 'School of Mechatronics & Robot Engineering',
+                heroRole: 'Robotics Engineer • Creator of Zehinli Knowledge Portal',
+                commonSystems: 'Common Systems',
+                settingsLabel: 'Settings',
+                switchThemeBtn: 'Switch Theme'
+            },
+            ZH: {
+                portalTitle: '校园门户',
+                statusOnline: 'Zehinli 核心: 在线',
+                subbarDept: '机电工程学院 • 机器人工程 (Robot Engineering)',
+                heroRole: '机器人工程 • Zehinli 个人知识门户开发者',
+                commonSystems: '常用系统',
+                settingsLabel: '设置',
+                switchThemeBtn: '切换主题'
+            }
+        };
+
+        document.getElementById('langSwitchBtn').addEventListener('click', () => {
+            langIdx = (langIdx + 1) % langs.length;
+            const code = langs[langIdx];
+            document.getElementById('currentLangBadge').textContent = code;
+            const t = dict[code];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.textContent = t[key];
+            });
+            showToast('Язык интерфейса: ' + code);
+        });
+
+        function openAiDrawer() {
+            showToast('Zehinli AI: Готов помочь с расчетами, кодом и конспектами');
+        }
+
+        // Toast Helper
+        let toastTimer = null;
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            document.getElementById('toastText').textContent = msg;
+            box.classList.remove('opacity-0', 'translate-y-2');
+            box.classList.add('opacity-100', 'translate-y-0');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                box.classList.remove('opacity-100', 'translate-y-0');
+                box.classList.add('opacity-0', 'translate-y-2');
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
