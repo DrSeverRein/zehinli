@@ -23,14 +23,15 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-       :root {
-    --bg-main: #f8fafc;
-    --bg-header: #ffffff;
-    --bg-card: #ffffff;
-    --bg-input: #ffffff;
-    --text-primary: #0f172a;
-    --border-color: #e2e8f0;
-}
+        :root {
+            /* Чистая белая дневная тема */
+            --bg-main: #f8fafc;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-input: #ffffff;
+            --text-primary: #0f172a;
+            --border-color: #e2e8f0;
+        }
 
         html.dark {
             /* Темная тема */
@@ -124,17 +125,17 @@
                 <div>
                     <h3 class="text-sm font-bold text-yellow-600 dark:text-yellow-400">队长重要提示：</h3>
                     <p class="text-xs md:text-sm mt-1">
-                        实践任务的照片（招聘会截图和职场访谈合影）请直接通过微信发给队长！此处仅收集文字内容。
+                        实践任务的照片（招聘会截图和职场访谈合影）请直接通过微信发给队长！此处所有内容均可自由填写。
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Форма -->
+        <!-- Форма (все поля свободные для текста, без обязательных ограничений) -->
         <div class="portal-card shadow-xl rounded-xl overflow-hidden mb-12">
             <div class="border-b border-gray-500/20 px-6 py-4 flex justify-between items-center">
                 <h3 class="text-lg font-semibold">填写你的个人部分</h3>
-                <span class="text-xs opacity-60">* Обязательные поля</span>
+                <span class="text-xs opacity-60">自由填写 (Свободный ввод)</span>
             </div>
 
             <form id="dataForm" class="p-6 md:p-8 space-y-8">
@@ -143,22 +144,16 @@
                     <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第一部分：职业目标</h4>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <div>
-                            <label for="nameMajor" class="block text-sm font-medium mb-1">1. 姓名和专业 <span class="text-red-500">*</span></label>
-                            <input type="text" id="nameMajor" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="例如：张三 - 机器人工程">
+                            <label for="nameMajor" class="block text-sm font-medium mb-1">1. 姓名和专业</label>
+                            <input type="text" id="nameMajor" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="例如：张三 - 机器人工程">
                         </div>
                         <div>
-                            <label for="talentType" class="block text-sm font-medium mb-1">3. 契合的杰出人才类型 <span class="text-red-500">*</span></label>
-                            <select id="talentType" required class="portal-input block w-full rounded-md p-2.5 text-sm">
-                                <option value="" disabled selected>请选择类型</option>
-                                <option value="学术大师">学术大师</option>
-                                <option value="工程巨匠">工程巨匠</option>
-                                <option value="业界领袖">业界领袖</option>
-                                <option value="治国栋梁">治国栋梁</option>
-                            </select>
+                            <label for="talentType" class="block text-sm font-medium mb-1">3. 契合的杰出人才类型</label>
+                            <input type="text" id="talentType" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="自由填写（例如：工程巨匠、学术大师、业界领袖等）">
                         </div>
                         <div class="sm:col-span-2">
-                            <label for="careerGoal" class="block text-sm font-medium mb-1">2. 具体的职业目标 <span class="text-red-500">*</span></label>
-                            <input type="text" id="careerGoal" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="例如：人工智能研发工程师、国企项目经理等（越具体越好）">
+                            <label for="careerGoal" class="block text-sm font-medium mb-1">2. 具体的职业目标</label>
+                            <input type="text" id="careerGoal" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="例如：人工智能研发工程师、国企项目经理等">
                         </div>
                     </div>
                 </div>
@@ -168,16 +163,16 @@
                     <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第二部分：行业分析与要求</h4>
                     <div class="space-y-6">
                         <div>
-                            <label for="industryStatus" class="block text-sm font-medium mb-1">4. 目标行业的现状、发展趋势和就业需求 <span class="text-red-500">*</span></label>
-                            <textarea id="industryStatus" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                            <label for="industryStatus" class="block text-sm font-medium mb-1">4. 目标行业的现状、发展趋势和就业需求</label>
+                            <textarea id="industryStatus" rows="3" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="自由输入..."></textarea>
                         </div>
                         <div>
-                            <label for="jobContent" class="block text-sm font-medium mb-1">5. 目标职业的具体工作内容 <span class="text-red-500">*</span></label>
-                            <textarea id="jobContent" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                            <label for="jobContent" class="block text-sm font-medium mb-1">5. 目标职业的具体工作内容</label>
+                            <textarea id="jobContent" rows="3" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="自由输入..."></textarea>
                         </div>
                         <div>
-                            <label for="jobReqs" class="block text-sm font-medium mb-1">6. 职业对个人特质、专业知识及能力的具体要求 <span class="text-red-500">*</span></label>
-                            <textarea id="jobReqs" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                            <label for="jobReqs" class="block text-sm font-medium mb-1">6. 职业对个人特质、专业知识及能力的具体要求</label>
+                            <textarea id="jobReqs" rows="3" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="自由输入..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -187,20 +182,20 @@
                     <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第三部分：差距分析与计划</h4>
                     <div class="space-y-6">
                         <div>
-                            <label for="gapAnalysis" class="block text-sm font-medium mb-1">7. 现实情况与目标要求的差距 (科学分析) <span class="text-red-500">*</span></label>
-                            <textarea id="gapAnalysis" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="作为大一学生，目前缺什么？"></textarea>
+                            <label for="gapAnalysis" class="block text-sm font-medium mb-1">7. 现实情况与目标要求的差距 (科学分析)</label>
+                            <textarea id="gapAnalysis" rows="3" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="作为大一学生，目前缺什么？"></textarea>
                         </div>
                         <div>
-                            <label for="shortTerm" class="block text-sm font-medium mb-1">8. 短期计划 (专业学习、学生社团等) <span class="text-red-500">*</span></label>
-                            <textarea id="shortTerm" rows="2" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                            <label for="shortTerm" class="block text-sm font-medium mb-1">8. 短期计划 (专业学习、学生社团等)</label>
+                            <textarea id="shortTerm" rows="2" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="自由输入..."></textarea>
                         </div>
                         <div>
-                            <label for="midTerm" class="block text-sm font-medium mb-1">9. 中期计划 (实习实践、科研、竞赛等) <span class="text-red-500">*</span></label>
-                            <textarea id="midTerm" rows="2" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                            <label for="midTerm" class="block text-sm font-medium mb-1">9. 中期计划 (实习实践、科研、竞赛等)</label>
+                            <textarea id="midTerm" rows="2" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="自由输入..."></textarea>
                         </div>
                         <div>
-                            <label for="longTerm" class="block text-sm font-medium mb-1">10. 长期计划 (毕业后规划：考研/就业等) <span class="text-red-500">*</span></label>
-                            <textarea id="longTerm" rows="2" required class="portal-input block w-full rounded-md p-2.5 text-sm"></textarea>
+                            <label for="longTerm" class="block text-sm font-medium mb-1">10. 长期计划 (毕业后规划：考研/就业等)</label>
+                            <textarea id="longTerm" rows="2" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="自由输入..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -210,12 +205,12 @@
                     <h4 class="text-md font-bold text-hit-blue border-b-2 border-hit-blue inline-block mb-4 pb-1">第四部分：实践任务 (文字记录)</h4>
                     <div class="space-y-6">
                         <div>
-                            <label for="jobFairTakeaways" class="block text-sm font-medium mb-1">11. 招聘会收获 <span class="text-red-500">*</span></label>
-                            <textarea id="jobFairTakeaways" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="参加了什么招聘会？写一小段话记录你的收获。照片发微信。"></textarea>
+                            <label for="jobFairTakeaways" class="block text-sm font-medium mb-1">11. 招聘会收获</label>
+                            <textarea id="jobFairTakeaways" rows="3" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="参加了什么招聘会？写一小段话记录你的收获。照片发微信。"></textarea>
                         </div>
                         <div>
-                            <label for="interviewTakeaways" class="block text-sm font-medium mb-1">12. 职场访谈收获 <span class="text-red-500">*</span></label>
-                            <textarea id="interviewTakeaways" rows="3" required class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="访谈了哪位人士（姓名及职务）？简单介绍并记录收获。合影发微信。"></textarea>
+                            <label for="interviewTakeaways" class="block text-sm font-medium mb-1">12. 职场访谈收获</label>
+                            <textarea id="interviewTakeaways" rows="3" class="portal-input block w-full rounded-md p-2.5 text-sm" placeholder="访谈了哪位人士（姓名及职务）？简单介绍并记录收获。合影发微信。"></textarea>
                         </div>
                     </div>
                 </div>
@@ -249,9 +244,9 @@
 
     <script>
         // ============================================================================
-        // ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ SUPABASE (Project Settings -> API)
+        // ТВОИ НАСТРОЕННЫЕ ДАННЫЕ SUPABASE (URL извлечен из твоего токена)
         // ============================================================================
-        const SUPABASE_URL = "sb_publishable_y06B6mbTaoF4xbKc9oWz5w_5eZpJkh3";
+        const SUPABASE_URL = "https://ctiwmrntpbcflhecsrfh.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0aXdtcm50cGJjZmxoZWNzcmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MTc2OTcsImV4cCI6MjEwODk5MzY5N30.1BCLIRkUFv99KbekKRx4qcywysxksnqIAqopblMJ3OY";
 
         const isSupabaseConfigured = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("YOUR_");
@@ -326,7 +321,7 @@
 
             const record = {
                 name_major: document.getElementById('nameMajor').value.trim(),
-                talent_type: document.getElementById('talentType').value,
+                talent_type: document.getElementById('talentType').value.trim(),
                 career_goal: document.getElementById('careerGoal').value.trim(),
                 industry_status: document.getElementById('industryStatus').value.trim(),
                 job_content: document.getElementById('jobContent').value.trim(),
@@ -417,7 +412,7 @@ ${sub.interview_takeaways || ''}`;
                             <div class="px-6 py-3 border-b border-gray-500/20 flex justify-between items-center bg-black/5 dark:bg-white/5">
                                 <h4 class="font-bold text-lg">
                                     <span class="text-hit-blue mr-2">#${submissions.length - index}</span>
-                                    ${sub.name_major}
+                                    ${sub.name_major || '未命名'}
                                 </h4>
                                 <button onclick="copyToClipboard('${contentId}')" class="text-xs portal-card hover:bg-hit-blue hover:text-white py-1.5 px-3 rounded-md flex items-center transition">
                                     📋 一键复制
