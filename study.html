@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zehinli.org | Учеба — Математика, Языки, Science, Универ</title>
+    <title>Zehinli.org | Учеба — Математика, Программирование, Английский, Science</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -41,26 +41,14 @@
             transition: background-color 0.25s ease, color 0.25s ease;
         }
 
-        .portal-header {
-            background-color: var(--bg-header);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .portal-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-        }
-
-        .math-nav-item.active {
-            background-color: var(--active-item-bg);
-            color: var(--active-item-text);
-            font-weight: 600;
-        }
+        .portal-header { background-color: var(--bg-header); border-bottom: 1px solid var(--border-color); }
+        .portal-card { background-color: var(--bg-card); border: 1px solid var(--border-color); }
+        .nav-item.active { background-color: var(--active-item-bg); color: var(--active-item-text); font-weight: 600; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- ШАПКА СТРАНИЦЫ УЧЕБА -->
+    <!-- ШАПКА -->
     <header class="portal-header h-16 sticky top-0 z-40 px-4 lg:px-8 flex items-center justify-between">
         <div class="flex items-center gap-4">
             <a href="./index.html" class="text-xs sm:text-sm font-semibold hover:text-blue-500 flex items-center gap-2 transition">
@@ -70,14 +58,14 @@
             <div class="h-5 w-[1px] bg-[var(--border-color)]"></div>
             <span class="text-sm font-bold flex items-center gap-2">
                 <i class="fa-solid fa-graduation-cap text-emerald-500"></i>
-                <span>Раздел «Учеба»</span>
+                <span>Образовательный Хаб (Study & Tech)</span>
             </span>
         </div>
 
         <div class="flex items-center gap-2">
             <button onclick="toggleTheme()" class="px-3 py-1.5 rounded-lg border border-[var(--border-color)] bg-[var(--bg-elevated)] text-xs font-medium flex items-center gap-2">
                 <i class="fa-solid fa-circle-half-stroke text-amber-500"></i>
-                <span id="themeBtnText">Тема</span>
+                <span>Тема</span>
             </button>
         </div>
     </header>
@@ -85,207 +73,190 @@
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
         
-        <!-- 4 Главных направления Учебы -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <!-- Верхние категории выбора -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
             <button onclick="selectMainBranch('math')" id="branch-math" class="portal-card p-4 rounded-xl text-left border-2 border-blue-500 transition">
                 <div class="text-blue-500 text-lg mb-1"><i class="fa-solid fa-square-root-variable"></i></div>
-                <div class="font-bold text-sm">1. Математика</div>
-                <div class="text-[11px] text-[var(--text-secondary)]">Algebra 1–2, Geometry, Trig, Precalculus</div>
+                <div class="font-bold text-sm">Математика</div>
+                <div class="text-[11px] text-[var(--text-secondary)]">Algebra, Precalculus</div>
             </button>
 
-            <button onclick="selectMainBranch('languages')" id="branch-languages" class="portal-card p-4 rounded-xl text-left hover:border-purple-500 transition">
-                <div class="text-purple-500 text-lg mb-1"><i class="fa-solid fa-language"></i></div>
-                <div class="font-bold text-sm">2. Языки</div>
-                <div class="text-[11px] text-[var(--text-secondary)]">Китайский (中文), HSK, English</div>
+            <button onclick="selectMainBranch('code')" id="branch-code" class="portal-card p-4 rounded-xl text-left hover:border-indigo-500 transition">
+                <div class="text-indigo-500 text-lg mb-1"><i class="fa-solid fa-code"></i></div>
+                <div class="font-bold text-sm">Программирование</div>
+                <div class="text-[11px] text-[var(--text-secondary)]">Python, CS & AI, Git</div>
+            </button>
+
+            <button onclick="selectMainBranch('english')" id="branch-english" class="portal-card p-4 rounded-xl text-left hover:border-purple-500 transition">
+                <div class="text-purple-500 text-lg mb-1"><i class="fa-solid fa-globe"></i></div>
+                <div class="font-bold text-sm">English (EN/RU)</div>
+                <div class="text-[11px] text-[var(--text-secondary)]">Tech English & Docs</div>
             </button>
 
             <button onclick="selectMainBranch('science')" id="branch-science" class="portal-card p-4 rounded-xl text-left hover:border-emerald-500 transition">
                 <div class="text-emerald-500 text-lg mb-1"><i class="fa-solid fa-atom"></i></div>
-                <div class="font-bold text-sm">3. Science</div>
-                <div class="text-[11px] text-[var(--text-secondary)]">Физика, Механика, Материалы</div>
+                <div class="font-bold text-sm">Science</div>
+                <div class="text-[11px] text-[var(--text-secondary)]">Физика, Механика</div>
             </button>
 
             <button onclick="selectMainBranch('uni')" id="branch-uni" class="portal-card p-4 rounded-xl text-left hover:border-amber-500 transition">
                 <div class="text-amber-500 text-lg mb-1"><i class="fa-solid fa-building-columns"></i></div>
-                <div class="font-bold text-sm">4. Университетский уровень</div>
-                <div class="text-[11px] text-[var(--text-secondary)]">高等数学, 线性代数, Python & AI</div>
+                <div class="font-bold text-sm">Университет</div>
+                <div class="text-[11px] text-[var(--text-secondary)]">HIT Robot Engineering</div>
             </button>
         </div>
 
-        <!-- СЕКЦИЯ МАТЕМАТИКИ (Боковое меню точно как на твоих скриншотах + рабочая область) -->
+        <!-- СЕКЦИЯ 1: МАТЕМАТИКА -->
         <div id="section-math" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-            
-            <!-- Левое меню курсов математики (в стиле скриншотов Algebra 1 / Geometry / Algebra 2 / Trigonometry / Precalculus) -->
             <aside class="md:col-span-4 lg:col-span-3 portal-card rounded-xl p-3 space-y-1">
-                <div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
-                    Курсы математики
-                </div>
-                <button onclick="selectMathCourse('algebra1')" id="nav-algebra1" class="math-nav-item active w-full text-left px-4 py-3 rounded-lg text-base transition">
-                    Algebra 1
-                </button>
-                <button onclick="selectMathCourse('geometry')" id="nav-geometry" class="math-nav-item w-full text-left px-4 py-3 rounded-lg text-base transition hover:bg-[var(--bg-elevated)]">
-                    Geometry
-                </button>
-                <button onclick="selectMathCourse('algebra2')" id="nav-algebra2" class="math-nav-item w-full text-left px-4 py-3 rounded-lg text-base transition hover:bg-[var(--bg-elevated)]">
-                    Algebra 2
-                </button>
-                <button onclick="selectMathCourse('trigonometry')" id="nav-trigonometry" class="math-nav-item w-full text-left px-4 py-3 rounded-lg text-base transition hover:bg-[var(--bg-elevated)]">
-                    Trigonometry
-                </button>
-                <button onclick="selectMathCourse('precalculus')" id="nav-precalculus" class="math-nav-item w-full text-left px-4 py-3 rounded-lg text-base transition hover:bg-[var(--bg-elevated)]">
-                    Precalculus
-                </button>
+                <div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Курсы математики</div>
+                <button onclick="selectMathCourse('algebra1')" id="nav-algebra1" class="nav-item active w-full text-left px-4 py-3 rounded-lg text-sm transition">Algebra 1</button>
+                <button onclick="selectMathCourse('geometry')" id="nav-geometry" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Geometry</button>
+                <button onclick="selectMathCourse('algebra2')" id="nav-algebra2" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Algebra 2</button>
+                <button onclick="selectMathCourse('trigonometry')" id="nav-trigonometry" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Trigonometry</button>
+                <button onclick="selectMathCourse('precalculus')" id="nav-precalculus" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Precalculus</button>
             </aside>
-
-            <!-- Правая панель с темами выбранного курса математики -->
             <section class="md:col-span-8 lg:col-span-9 portal-card rounded-xl p-6">
-                <div class="border-b border-[var(--border-color)] pb-4 mb-6 flex items-center justify-between">
-                    <div>
-                        <span id="courseBadge" class="text-xs font-mono uppercase px-2.5 py-1 rounded bg-blue-500/15 text-blue-500 font-semibold">MATH • COURSE 01</span>
-                        <h1 id="courseTitle" class="text-2xl font-bold mt-2">Algebra 1</h1>
-                        <p id="courseDesc" class="text-sm text-[var(--text-secondary)] mt-1">Фундаментальная алгебра: линейные уравнения, функции, графики и системы.</p>
-                    </div>
+                <div class="border-b border-[var(--border-color)] pb-4 mb-6">
+                    <span id="courseBadge" class="text-xs font-mono uppercase px-2.5 py-1 rounded bg-blue-500/15 text-blue-500 font-semibold">MATH</span>
+                    <h1 id="courseTitle" class="text-2xl font-bold mt-2">Algebra 1</h1>
+                    <p id="courseDesc" class="text-sm text-[var(--text-secondary)] mt-1">Линейные уравнения, функции и системы.</p>
                 </div>
-
-                <div id="courseTopicsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Заполняется скриптом -->
-                </div>
+                <div id="courseTopicsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </section>
         </div>
 
-        <!-- Заглушки для остальных 3 веток (Языки, Science, Универ), которые ты разделишь позже -->
+        <!-- СЕКЦИЯ 2: ПРОГРАММИРОВАНИЕ (PYTHON & CS) -->
+        <div id="section-code" class="hidden grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            <aside class="md:col-span-4 lg:col-span-3 portal-card rounded-xl p-3 space-y-1">
+                <div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Разделы кода</div>
+                <button onclick="selectCodeCourse('python')" id="nav-python" class="nav-item active w-full text-left px-4 py-3 rounded-lg text-sm transition">Python Core & Lab</button>
+                <button onclick="selectCodeCourse('algorithms')" id="nav-algorithms" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Алгоритмы и Структуры</button>
+                <button onclick="selectCodeCourse('web')" id="nav-web" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Web & Frontend</button>
+                <button onclick="selectCodeCourse('robotics')" id="nav-robotics" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Робототехника / ROS</button>
+            </aside>
+            <section class="md:col-span-8 lg:col-span-9 portal-card rounded-xl p-6">
+                <div class="border-b border-[var(--border-color)] pb-4 mb-6">
+                    <span id="codeBadge" class="text-xs font-mono uppercase px-2.5 py-1 rounded bg-indigo-500/15 text-indigo-400 font-semibold">DEVELOPMENT</span>
+                    <h1 id="codeTitle" class="text-2xl font-bold mt-2">Python Core & Lab</h1>
+                    <p id="codeDesc" class="text-sm text-[var(--text-secondary)] mt-1">Основы языка, скрипты автоматизации, работа с библиотеками.</p>
+                </div>
+                <div id="codeTopicsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            </section>
+        </div>
+
+        <!-- СЕКЦИЯ 3: ENGLISH FOR TECH & STUDIES -->
+        <div id="section-english" class="hidden grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            <aside class="md:col-span-4 lg:col-span-3 portal-card rounded-xl p-3 space-y-1">
+                <div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Английский язык</div>
+                <button onclick="selectEngCourse('tech')" id="nav-tech" class="nav-item active w-full text-left px-4 py-3 rounded-lg text-sm transition">Technical English</button>
+                <button onclick="selectEngCourse('docs')" id="nav-docs" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Reading Docs & API</button>
+                <button onclick="selectEngCourse('academic')" id="nav-academic" class="nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition hover:bg-[var(--bg-elevated)]">Academic Writing</button>
+            </aside>
+            <section class="md:col-span-8 lg:col-span-9 portal-card rounded-xl p-6">
+                <div class="border-b border-[var(--border-color)] pb-4 mb-6">
+                    <span id="engBadge" class="text-xs font-mono uppercase px-2.5 py-1 rounded bg-purple-500/15 text-purple-400 font-semibold">LANGUAGE</span>
+                    <h1 id="engTitle" class="text-2xl font-bold mt-2">Technical English</h1>
+                    <p id="engDesc" class="text-sm text-[var(--text-secondary)] mt-1">Инженерная лексика, технические термины и чтение документации без переводчика.</p>
+                </div>
+                <div id="engTopicsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            </section>
+        </div>
+
+        <!-- СЕКЦИИ SCIENCE И УНИВЕР -->
         <div id="section-other" class="hidden portal-card rounded-xl p-8 text-center">
-            <h2 id="otherTitle" class="text-xl font-bold">Раздел в разработке</h2>
-            <p id="otherDesc" class="text-sm text-[var(--text-secondary)] mt-2 max-w-md mx-auto">
-                Этот раздел пока находится в стадии наполнения. Позже здесь появятся отдельные подразделы и конспекты.
-            </p>
+            <h2 id="otherTitle" class="text-xl font-bold">Раздел</h2>
+            <p id="otherDesc" class="text-sm text-[var(--text-secondary)] mt-2">Материалы и конспекты загружаются...</p>
         </div>
 
     </main>
 
     <script>
-        // Синхронизация темы
         const htmlEl = document.documentElement;
-        function applyTheme(t) {
-            htmlEl.setAttribute('data-theme', t);
-            localStorage.setItem('zehinli_theme', t);
-        }
-        function toggleTheme() {
-            const next = (htmlEl.getAttribute('data-theme') || 'dark') === 'dark' ? 'light' : 'dark';
-            applyTheme(next);
-        }
+        function applyTheme(t) { htmlEl.setAttribute('data-theme', t); localStorage.setItem('zehinli_theme', t); }
+        function toggleTheme() { applyTheme((htmlEl.getAttribute('data-theme') || 'dark') === 'dark' ? 'light' : 'dark'); }
         applyTheme(localStorage.getItem('zehinli_theme') || 'dark');
 
-        // Данные для 5 разделов математики
+        // Данные Математики
         const mathCourses = {
-            algebra1: {
-                badge: 'MATH • COURSE 01',
-                title: 'Algebra 1',
-                desc: 'Основы алгебры, линейные уравнения, неравенства, функции и квадратные уравнения.',
-                topics: [
-                    '1. Основы алгебры (Foundations)',
-                    '2. Решение уравнений и неравенств',
-                    '3. Линейные уравнения и графики',
-                    '4. Системы уравнений',
-                    '5. Функции (Functions)',
-                    '6. Степени и радикалы (Exponents & Radicals)',
-                    '7. Квадратные функции и уравнения'
-                ]
-            },
-            geometry: {
-                badge: 'MATH • COURSE 02',
-                title: 'Geometry',
-                desc: 'Евклидова геометрия, треугольники, окружности, координатная плоскость и объемы.',
-                topics: [
-                    '1. Прямые, углы и преобразования',
-                    '2. Конгруэнтность и подобие треугольников',
-                    '3. Прямоугольные треугольники и теорема Пифагора',
-                    '4. Аналитическая геометрия на плоскости',
-                    '5. Окружности, дуги и вписанные углы',
-                    '6. Площади и объемы 3D-фигур'
-                ]
-            },
-            algebra2: {
-                badge: 'MATH • COURSE 03',
-                title: 'Algebra 2',
-                desc: 'Полиномы, комплексные числа, показательные и логарифмические функции.',
-                topics: [
-                    '1. Многочлены (Polynomial arithmetic & factoring)',
-                    '2. Комплексные числа (Complex numbers)',
-                    '3. Рациональные выражения и уравнения',
-                    '4. Показательные модели и логарифмы',
-                    '5. Преобразования функций'
-                ]
-            },
-            trigonometry: {
-                badge: 'MATH • COURSE 04',
-                title: 'Trigonometry',
-                desc: 'Тригонометрические функции, единичная окружность, обратные функции и тождества.',
-                topics: [
-                    '1. Прямоугольная тригонометрия (sin, cos, tan)',
-                    '2. Радианная мера и единичная окружность (Unit Circle)',
-                    '3. Графики синусоидальных функций',
-                    '4. Тригонометрические тождества и формулы сложения',
-                    '5. Теорема синусов и теорема косинусов'
-                ]
-            },
-            precalculus: {
-                badge: 'MATH • COURSE 05',
-                title: 'Precalculus',
-                desc: 'Продвинутая подготовка к высшей математике: комплексные плоскости, векторы, матрицы, ряды и пределы.',
-                topics: [
-                    '1. Составные и обратные функции',
-                    '2. Полярные координаты и комплексная плоскость',
-                    '3. Векторы и операции над ними (Vectors)',
-                    '4. Матрицы и системы (Matrices)',
-                    '5. Конические сечения (Эллипс, гипербола, парабола)',
-                    '6. Последовательности, ряды и введение в пределы (Limits)'
-                ]
-            }
+            algebra1: { badge: 'MATH • 01', title: 'Algebra 1', desc: 'Линейные уравнения, системы и неравенства.', topics: ['Основы алгебры', 'Линейные уравнения', 'Системы уравнений', 'Функции'] },
+            geometry: { badge: 'MATH • 02', title: 'Geometry', desc: 'Планиметрия, стереометрия и теоремы.', topics: ['Углы и треугольники', 'Теорема Пифагора', 'Окружности', 'Объемы тел'] },
+            algebra2: { badge: 'MATH • 03', title: 'Algebra 2', desc: 'Полиномы, логарифмы, комплексные числа.', topics: ['Многочлены', 'Логарифмы', 'Комплексные числа'] },
+            trigonometry: { badge: 'MATH • 04', title: 'Trigonometry', desc: 'Единичная окружность и тождества.', topics: ['Единичная окружность', 'Синусоиды', 'Тождества'] },
+            precalculus: { badge: 'MATH • 05', title: 'Precalculus', desc: 'Векторы, матрицы, пределы.', topics: ['Векторы и матрицы', 'Пределы функций', 'Ряды'] }
         };
 
-        function selectMathCourse(key) {
-            const c = mathCourses[key];
-            if (!c) return;
+        // Данные Программирования
+        const codeCourses = {
+            python: { badge: 'DEV • PYTHON', title: 'Python Core & Lab', desc: 'Синтаксис, ООП, скрипты автоматизации.', topics: ['Типы данных и циклы', 'Функции и ООП', 'Работа с файлами', 'Библиотеки NumPy/Pandas'] },
+            algorithms: { badge: 'DEV • ALGO', title: 'Алгоритмы и Структуры', desc: 'Сортировки, графы, деревья.', topics: ['Сложность O(n)', 'Сортировки и поиск', 'Деревья и графы'] },
+            web: { badge: 'DEV • WEB', title: 'Web & Frontend', desc: 'HTML, CSS, Tailwind, JavaScript.', topics: ['HTML5 & CSS3 Flexbox', 'Tailwind CSS UI', 'JavaScript DOM & Fetch'] },
+            robotics: { badge: 'DEV • ROBOT', title: 'Робототехника / ROS', desc: 'Управление железом, датчики, микроконтроллеры.', topics: ['Arduino / ESP32', 'ROS (Robot Operating System)', 'UART / I2C протоколы'] }
+        };
 
-            document.querySelectorAll('.math-nav-item').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('nav-' + key).classList.add('active');
-
-            document.getElementById('courseBadge').textContent = c.badge;
-            document.getElementById('courseTitle').textContent = c.title;
-            document.getElementById('courseDesc').textContent = c.desc;
-
-            const grid = document.getElementById('courseTopicsGrid');
-            grid.innerHTML = c.topics.map(t => `
-                <div class="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 hover:border-blue-500 transition cursor-pointer">
-                    <div class="font-semibold text-sm">${t}</div>
-                    <div class="text-xs text-[var(--text-secondary)] mt-1">Конспекты и задачи →</div>
-                </div>
-            `).join('');
-        }
+        // Данные Английского языка
+        const engCourses = {
+            tech: { badge: 'LANG • TECH', title: 'Technical English', desc: 'Инженерная и IT лексика.', topics: ['Engineering terms', 'Hardware & Software vocabulary', 'Daily standup phrases'] },
+            docs: { badge: 'LANG • DOCS', title: 'Reading Docs & API', desc: 'Чтение официальной документации без словаря.', topics: ['GitHub READMEs', 'API documentation', 'StackOverflow navigation'] },
+            academic: { badge: 'LANG • WRITING', title: 'Academic Writing', desc: 'Написание отчетов, резюме и писем.', topics: ['Research paper structure', 'Professional emails', 'CV & Cover Letter'] }
+        };
 
         function selectMainBranch(branch) {
-            ['math', 'languages', 'science', 'uni'].forEach(b => {
-                document.getElementById('branch-' + b).classList.remove('border-2', 'border-blue-500');
+            ['math', 'code', 'english', 'science', 'uni'].forEach(b => {
+                const btn = document.getElementById('branch-' + b);
+                if(btn) btn.classList.remove('border-2', 'border-blue-500', 'border-indigo-500', 'border-purple-500', 'border-emerald-500', 'border-amber-500');
             });
-            document.getElementById('branch-' + branch).classList.add('border-2', 'border-blue-500');
+            document.getElementById('branch-' + branch).classList.add('border-2', branch === 'math' ? 'border-blue-500' : branch === 'code' ? 'border-indigo-500' : branch === 'english' ? 'border-purple-500' : branch === 'science' ? 'border-emerald-500' : 'border-amber-500');
+
+            ['math', 'code', 'english', 'other'].forEach(s => {
+                document.getElementById('section-' + s).classList.add('hidden');
+            });
 
             if (branch === 'math') {
                 document.getElementById('section-math').classList.remove('hidden');
-                document.getElementById('section-other').classList.add('hidden');
+                selectMathCourse('algebra1');
+            } else if (branch === 'code') {
+                document.getElementById('section-code').classList.remove('hidden');
+                selectCodeCourse('python');
+            } else if (branch === 'english') {
+                document.getElementById('section-english').classList.remove('hidden');
+                selectEngCourse('tech');
             } else {
-                document.getElementById('section-math').classList.add('hidden');
                 document.getElementById('section-other').classList.remove('hidden');
-                const names = {
-                    languages: 'Языки (Китайский HSK, Английский)',
-                    science: 'Science (Физика, Химия, Материаловедение)',
-                    uni: 'Университетский уровень (Высшая математика, Линейная алгебра, Python)'
-                };
-                document.getElementById('otherTitle').textContent = names[branch];
+                document.getElementById('otherTitle').textContent = branch === 'science' ? 'Science (Физика и Материаловедение)' : 'Университетский уровень (HIT Robot Engineering)';
             }
         }
 
-        // Инициализация по умолчанию
+        function selectMathCourse(key) {
+            const c = mathCourses[key];
+            document.querySelectorAll('#section-math .nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('nav-' + key).classList.add('active');
+            document.getElementById('courseBadge').textContent = c.badge;
+            document.getElementById('courseTitle').textContent = c.title;
+            document.getElementById('courseDesc').textContent = c.desc;
+            document.getElementById('courseTopicsGrid').innerHTML = c.topics.map(t => `<div class="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 hover:border-blue-500 transition cursor-pointer"><div class="font-semibold text-sm">${t}</div><div class="text-xs text-[var(--text-secondary)] mt-1">Конспекты и задачи →</div></div>`).join('');
+        }
+
+        function selectCodeCourse(key) {
+            const c = codeCourses[key];
+            document.querySelectorAll('#section-code .nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('nav-' + key).classList.add('active');
+            document.getElementById('codeBadge').textContent = c.badge;
+            document.getElementById('codeTitle').textContent = c.title;
+            document.getElementById('codeDesc').textContent = c.desc;
+            document.getElementById('codeTopicsGrid').innerHTML = c.topics.map(t => `<div class="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 hover:border-indigo-500 transition cursor-pointer"><div class="font-semibold text-sm">${t}</div><div class="text-xs text-[var(--text-secondary)] mt-1">Примеры кода и шпаргалки →</div></div>`).join('');
+        }
+
+        function selectEngCourse(key) {
+            const c = engCourses[key];
+            document.querySelectorAll('#section-english .nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('nav-' + key).classList.add('active');
+            document.getElementById('engBadge').textContent = c.badge;
+            document.getElementById('engTitle').textContent = c.title;
+            document.getElementById('engDesc').textContent = c.desc;
+            document.getElementById('engTopicsGrid').innerHTML = c.topics.map(t => `<div class="p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)]/50 hover:border-purple-500 transition cursor-pointer"><div class="font-semibold text-sm">${t}</div><div class="text-xs text-[var(--text-secondary)] mt-1">Словарь и упражнения →</div></div>`).join('');
+        }
+
         selectMathCourse('algebra1');
     </script>
 </body>
